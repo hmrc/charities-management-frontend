@@ -32,7 +32,7 @@ class CharitiesRepaymentDashboardController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = authAction { implicit request =>
-    Ok(view(request.charUser.referenceId))
+    Ok(view(request.charityUser.referenceId))
   }
 
 }

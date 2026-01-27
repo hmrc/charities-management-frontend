@@ -35,7 +35,7 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
 
   class Harness(authorisedAction: ClaimsAuthorisedAction) {
     def onPageLoad: Action[AnyContent] = authorisedAction { request =>
-      Results.Ok(s"UserType: ${request.charUser.userType}, UserReferenceId: ${request.charUser.referenceId.getOrElse("")}")
+      Results.Ok(s"UserType: ${request.charityUser.userType}, UserReferenceId: ${request.charityUser.referenceId.getOrElse("")}")
     }
   }
 

@@ -18,7 +18,7 @@ package controllers.actions
 
 import com.google.inject.Inject
 import models.requests.UserType.*
-import models.requests.{AuthorisedRequest, CharUser, UserType}
+import models.requests.{AuthorisedRequest, CharityUser, UserType}
 import play.api.mvc.*
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,7 +31,7 @@ class FakeClaimsAuthorisedAction @Inject()(cc: ControllerComponents, userType: U
   override protected def executionContext: ExecutionContext = ec
 
   override def invokeBlock[A](request: Request[A], block: AuthorisedRequest[A] => Future[Result]): Future[Result] = {
-    val authRequest = new AuthorisedRequest[A](request, CharUser(userType, Some(userReference)))
+    val authRequest = new AuthorisedRequest[A](request, CharityUser(userType, Some(userReference)))
     block(authRequest)
   }
 }

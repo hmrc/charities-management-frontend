@@ -22,7 +22,7 @@ import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
 import controllers.actions.AuthorisedAction.*
-import models.requests.{AuthorisedRequest, CharUser, UserType}
+import models.requests.{AuthorisedRequest, CharityUser, UserType}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -33,52 +33,51 @@ import scala.concurrent.{ExecutionContext, Future}
 trait ClaimsAuthorisedAction extends ActionBuilder[AuthorisedRequest, AnyContent] with ActionFunction[Request, AuthorisedRequest]
 
 @Singleton
-class DefaultClaimsAuthorisedAction @Inject() (
-  override val authConnector: AuthConnector,
-  val parser: BodyParsers.Default
-)(implicit val executionContext: ExecutionContext)
-    extends ClaimsAuthorisedAction
+class DefaultClaimsAuthorisedAction @Inject()(
+                                               override val authConnector: AuthConnector,
+                                               val parser: BodyParsers.Default
+                                             )(implicit val executionContext: ExecutionContext)
+  extends ClaimsAuthorisedAction
     with AuthorisedFunctions {
 
   override def invokeBlock[A](
-    request: Request[A],
-    block: AuthorisedRequest[A] => Future[Result]
-  ): Future[Result] = {
+                               request: Request[A],
+                               block: AuthorisedRequest[A] => Future[Result]
+                             ): Future[Result] = {
 
     given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     authorised().retrieve(Retrievals.affinityGroup.and(Retrievals.allEnrolments)) {
-      case Some(affinityGroup @ (AffinityGroup.Agent | AffinityGroup.Organisation)) ~ enrolments =>
+      case Some(affinityGroup@(AffinityGroup.Agent | AffinityGroup.Organisation)) ~ enrolments =>
+
         val (enrolmentKey, identifierName, userType) =
           affinityGroup match {
-            case AffinityGroup.Agent        => (AGENT_ENROLMENT_KEY, AGENT_IDENTIFIER_NAME, UserType.Agent)
+            case AffinityGroup.Agent => (AGENT_ENROLMENT_KEY, AGENT_IDENTIFIER_NAME, UserType.Agent)
             case AffinityGroup.Organisation => (ORG_ENROLMENT_KEY, ORG_IDENTIFIER_NAME, UserType.Organisation)
           }
 
-        AuthorisedAction
-          .getEnrolmentId(enrolments, enrolmentKey, identifierName)
-          .map { uId =>
-            block(AuthorisedRequest(request, CharUser(userType, Some(uId))))
-          }
-          .getOrElse {
-            Future.failed(UnsupportedAffinityGroup(s"${userType.toString} enrolment missing or not activated"))
-          }
+        AuthorisedAction.getEnrolmentId(enrolments, enrolmentKey, identifierName).map { uId =>
+          block(AuthorisedRequest(request, CharityUser(userType, Some(uId))))
+        }.getOrElse {
+          Future.failed(UnsupportedAffinityGroup(s"${userType.toString} enrolment missing or not activated"))
+        }
       case _ =>
-        block(AuthorisedRequest(request, CharUser(UserType.Individual, None)))
+        block(AuthorisedRequest(request, CharityUser(UserType.Individual, None)))
     }
   }
 }
 
 object AuthorisedAction {
-  val ORG_ENROLMENT_KEY     = "HMRC-CHAR-ORG"
-  val ORG_IDENTIFIER_NAME   = "CHARID"
-  val AGENT_ENROLMENT_KEY   = "HMRC-CHAR-AGENT"
+  val ORG_ENROLMENT_KEY = "HMRC-CHAR-ORG"
+  val ORG_IDENTIFIER_NAME = "CHARID"
+  val AGENT_ENROLMENT_KEY = "HMRC-CHAR-AGENT"
   val AGENT_IDENTIFIER_NAME = "AGENTCHARID"
 
-  def getEnrolmentId(enrolments: Enrolments, enrolmentKey: String, identifierName: String): Option[String] = {
+  def getEnrolmentId(enrolments: Enrolments, enrolmentKey: String,
+                     identifierName: String): Option[String] = {
     enrolments.getEnrolment(enrolmentKey).flatMap(_.getIdentifier(identifierName)) match {
       case Some(enrolment) => Some(enrolment.value)
-      case None            => None
+      case None => None
     }
   }
 }
