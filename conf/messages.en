@@ -12,7 +12,7 @@ charityRepaymentDashboard.card.2.heading = Make a repayment claim using software
 charityRepaymentDashboard.card.2.p = Use this to make a charity repayment claim using software, like a database.
 
 #Error Page
-error.title = Sorry, there is a problem with the service
+error.title = Sorry, there is a problem with the service - Charities - GOV.UK
 error.heading = Sorry, there is a problem with the service
 error.p = You do not have access to this service.
 error.signInLink = Continue to your account

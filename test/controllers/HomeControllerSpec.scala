@@ -32,7 +32,7 @@ class HomeControllerSpec extends ControllerSpecBase {
 
   "HomeController landingPage" should {
     "redirect to CharitiesRepaymentDashboardController for Organisation users" in new Fixture {
-      val result = controller(Organisation).landingPage(request)
+      private val result = controller(Organisation).landingPage(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
@@ -40,7 +40,7 @@ class HomeControllerSpec extends ControllerSpecBase {
     }
 
     "redirect to CharitiesRepaymentDashboardAgentController for Agent users" in new Fixture {
-      val result = controller(Agent).landingPage(request)
+      private val result = controller(Agent).landingPage(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
@@ -48,7 +48,7 @@ class HomeControllerSpec extends ControllerSpecBase {
     }
 
     "redirect to AccessDeniedController for unsupported user types" in new Fixture {
-      val result = controller(UserType.Individual).landingPage(request)
+      private val result = controller(UserType.Individual).landingPage(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
