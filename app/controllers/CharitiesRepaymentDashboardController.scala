@@ -31,7 +31,7 @@ class CharitiesRepaymentDashboardController @Inject()(
                                                      ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = authAction { implicit request =>
-    Ok(view(request.charUser.charUserId))
+    Ok(view(request.charUser.referenceId))
   }
 
 }
