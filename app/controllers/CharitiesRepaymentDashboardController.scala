@@ -24,11 +24,12 @@ import views.html.CharityRepaymentDashboardView
 
 import javax.inject.Inject
 
-class CharitiesRepaymentDashboardController @Inject()(
-                                                       val controllerComponents: MessagesControllerComponents,
-                                                       authAction: ClaimsAuthorisedAction,
-                                                       view: CharityRepaymentDashboardView
-                                                     ) extends FrontendBaseController with I18nSupport {
+class CharitiesRepaymentDashboardController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  authAction: ClaimsAuthorisedAction,
+  view: CharityRepaymentDashboardView
+) extends FrontendBaseController
+    with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = authAction { implicit request =>
     Ok(view(request.charUser.referenceId))

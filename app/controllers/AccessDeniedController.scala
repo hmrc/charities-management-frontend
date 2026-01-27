@@ -25,13 +25,13 @@ import views.html.ErrorView
 
 import javax.inject.Inject
 
-class AccessDeniedController @Inject()(
-                                        val controllerComponents: MessagesControllerComponents,
-                                        authAction: ClaimsAuthorisedAction,
-                                        appConfig: AppConfig,
-                                        view: ErrorView
-                                      ) extends FrontendBaseController
-  with I18nSupport {
+class AccessDeniedController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  authAction: ClaimsAuthorisedAction,
+  appConfig: AppConfig,
+  view: ErrorView
+) extends FrontendBaseController
+    with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = authAction { implicit request =>
     Forbidden(view(appConfig.accountUrl))

@@ -19,6 +19,6 @@ package models.requests
 import play.api.mvc.{Request, WrappedRequest}
 
 final case class AuthorisedRequest[A](
-                                       underlying: Request[A],
-                                       charUser: CharUser
-                                     ) extends WrappedRequest[A](underlying)
+  underlying: Request[A],
+  charUser: CharUser
+) extends WrappedRequest[A](underlying)

@@ -17,6 +17,6 @@
 package models.requests
 
 final case class CharUser(
-                           userType: UserType,
-                           referenceId: Option[String]
-                         )
+  userType: UserType,
+  referenceId: Option[String]
+)
