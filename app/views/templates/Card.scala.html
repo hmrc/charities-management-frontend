@@ -22,12 +22,13 @@ extraClasses: String = ""
 
 <div class="card card--clickable @extraClasses">
 
-    <h1 class="govuk-heading-m card__heading">
+    <h2 class="govuk-heading-m card__heading">
+        <span class="govuk-visually-hidden">(opens in new tab)</span>
         <a class="govuk-link card__link govuk-link--no-visited-state card__link--block"
            href="@href">
             @title
         </a>
-    </h1>
+    </h2>
 
     @description.map { text =>
     <p class="govuk-body card__description">
