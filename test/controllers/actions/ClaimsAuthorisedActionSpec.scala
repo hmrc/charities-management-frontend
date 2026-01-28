@@ -44,30 +44,12 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
   "AuthorisedAction" should {
     "create AuthorisedRequest when user has an Organisation affinity group" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
+      val orgEnrolment = Enrolments(Set(Enrolment("HMRC-CHAR-ORG", Seq(EnrolmentIdentifier("CHARID", "1234567890")), "Activated")))
 
-      when(
-        mockAuthConnector.authorise(
-          any[Predicate],
-          any[Retrieval[Option[AffinityGroup] ~ Enrolments]]
-        )(any[HeaderCarrier], any[ExecutionContext])
-      ).thenReturn(
-        Future.successful(
-          new~(
-            Some(AffinityGroup.Organisation),
-            Enrolments(
-              Set(
-                Enrolment(
-                  "HMRC-CHAR-ORG",
-                  Seq(EnrolmentIdentifier("CHARID", "1234567890")),
-                  "Activated"
-                )
-              )
-            )
-          )
-        )
-      )
-      val authorisedAction =
-        new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
+      when(mockAuthConnector.authorise(any[Predicate], any[Retrieval[Option[AffinityGroup] ~ Enrolments]])(any[HeaderCarrier], any[ExecutionContext])).
+        thenReturn(Future.successful(new~(Some(AffinityGroup.Organisation), orgEnrolment)))
+
+      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
 
       val controller = new Harness(authorisedAction)
       val result = controller.onPageLoad(FakeRequest("GET", "/test"))
@@ -77,31 +59,12 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
 
     "create AuthorisedRequest when user has an Agent affinity group" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
+      val agentEnrolment = Enrolments(Set(Enrolment("HMRC-CHAR-AGENT", Seq(EnrolmentIdentifier("AGENTCHARID", "1234567890")), "Activated")))
 
-      when(
-        mockAuthConnector.authorise(
-          any[Predicate],
-          any[Retrieval[Option[AffinityGroup] ~ Enrolments]]
-        )(any[HeaderCarrier], any[ExecutionContext])
-      ).thenReturn(
-        Future.successful(
-          new~(
-            Some(AffinityGroup.Agent),
-            Enrolments(
-              Set(
-                Enrolment(
-                  "HMRC-CHAR-AGENT",
-                  Seq(EnrolmentIdentifier("AGENTCHARID", "1234567890")),
-                  "Activated"
-                )
-              )
-            )
-          )
-        )
-      )
+      when(mockAuthConnector.authorise(any[Predicate], any[Retrieval[Option[AffinityGroup] ~ Enrolments]])(any[HeaderCarrier], any[ExecutionContext]))
+        .thenReturn(Future.successful(new~(Some(AffinityGroup.Agent), agentEnrolment)))
 
-      val authorisedAction =
-        new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
+      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
 
       val controller = new Harness(authorisedAction)
       val result = controller.onPageLoad(FakeRequest("GET", "/test"))
@@ -112,24 +75,10 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
     "create AuthorisedRequest with no User Reference when user has an Individual affinity group" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
-      when(
-        mockAuthConnector.authorise(
-          any[Predicate],
-          any[Retrieval[Option[AffinityGroup] ~ Enrolments]]
-        )(any[HeaderCarrier], any[ExecutionContext])
-      ).thenReturn(
-        Future.successful(
-          new~(
-            Some(AffinityGroup.Individual),
-            Enrolments(
-              Set.empty
-            )
-          )
-        )
-      )
+      when(mockAuthConnector.authorise(any[Predicate], any[Retrieval[Option[AffinityGroup] ~ Enrolments]])(any[HeaderCarrier], any[ExecutionContext]))
+        .thenReturn(Future.successful(new~(Some(AffinityGroup.Individual), Enrolments(Set.empty))))
 
-      val authorisedAction =
-        new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
+      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
 
       val controller = new Harness(authorisedAction)
       val result = controller.onPageLoad(FakeRequest("GET", "/test"))
@@ -140,24 +89,10 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
     "throw UnsupportedAffinityGroup when provided with incorrect enrolments" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
-      when(
-        mockAuthConnector.authorise(
-          any[Predicate],
-          any[Retrieval[Option[AffinityGroup] ~ Enrolments]]
-        )(any[HeaderCarrier], any[ExecutionContext])
-      ).thenReturn(
-        Future.successful(
-          new~(
-            Some(AffinityGroup.Agent),
-            Enrolments(
-              Set.empty
-            )
-          )
-        )
-      )
+      when(mockAuthConnector.authorise(any[Predicate], any[Retrieval[Option[AffinityGroup] ~ Enrolments]])(any[HeaderCarrier], any[ExecutionContext]))
+        .thenReturn(Future.successful(new~(Some(AffinityGroup.Agent), Enrolments(Set.empty))))
 
-      val authorisedAction =
-        new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
+      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
 
       val controller = new Harness(authorisedAction)
       val result = controller.onPageLoad(FakeRequest("GET", "/test")).failed

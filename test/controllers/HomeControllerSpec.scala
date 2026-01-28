@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ class HomeControllerSpec extends ControllerSpecBase {
         controllers.routes.CharitiesRepaymentDashboardAgentController.onPageLoad.url
     }
 
-    "redirect to AccessDeniedController for unsupported user types" in new Fixture {
+    "redirect to AccessDeniedController for unsupported user types i.e Individual" in new Fixture {
       private val result = controller(UserType.Individual).landingPage(request)
 
       status(result) mustBe SEE_OTHER

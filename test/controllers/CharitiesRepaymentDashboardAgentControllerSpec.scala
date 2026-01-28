@@ -16,36 +16,28 @@
 
 package controllers
 
-import config.AppConfig
-import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
 import org.scalatestplus.play.PlaySpec
 import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.Html
 import util.ControllerSpecBase
-import views.html.ErrorView
+import views.html.CharityRepaymentDashboardAgentView
 
-class AccessDeniedControllerSpec extends ControllerSpecBase {
+class CharitiesRepaymentDashboardAgentControllerSpec extends ControllerSpecBase {
 
-  "AccessDeniedController onPageLoad" should {
-    
-    "return 403 Forbidden and render the error view" in {
-      val accountUrl = "http://example.com/account"
+  "CharitiesRepaymentDashboardAgentController onPageLoad" should {
+    "return 200 OK and render the CharityRepaymentDashboardAgentView view" in {
+      val mockView = mock[CharityRepaymentDashboardAgentView]
+      when(mockView.apply()(any(), any())).thenReturn(Html("<p>Success View</p>"))
 
-      val mockConfig: AppConfig = mock[AppConfig]
-      val mockView: ErrorView = mock[ErrorView]
-
-      when(mockConfig.accountUrl).thenReturn(accountUrl)
-      when(mockView.apply(eqTo(accountUrl))(any(), any())).thenReturn(Html("<p>Access denied</p>"))
-
-      val controller = new AccessDeniedController(cc, fakeAuth(), mockConfig, mockView)
-
+      val controller = new CharitiesRepaymentDashboardAgentController(cc, fakeAuth(), mockView)
       val result = controller.onPageLoad(FakeRequest())
 
-      status(result) mustBe FORBIDDEN
-      contentAsString(result) must include("Access denied")
-      verify(mockView).apply(eqTo("http://example.com/account"))(any(), any())
+      status(result) mustBe OK
+      contentAsString(result) must include("Success View")
+      verify(mockView).apply()(any(), any())
     }
   }
 }

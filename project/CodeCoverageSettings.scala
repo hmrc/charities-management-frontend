@@ -15,7 +15,8 @@ object CodeCoverageSettings {
     ".*Reverse.*",
     ".*AppConfig",
     ".*viewmodels.govuk.*;",
-    "views"
+    ".*Module",
+    "views.html.*;views.html.templates.*"
   )
 
   val settings: Seq[Setting[_]] = Seq(

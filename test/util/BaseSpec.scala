@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,4 +36,5 @@ trait BaseSpec extends PlaySpec with MockitoSugar with ScalaFutures with OptionV
 
   override implicit val patienceConfig: PatienceConfig =
     PatienceConfig(timeout = scaled(Span(1000, Millis)), interval = scaled(Span(50, Millis)))
+
 }
