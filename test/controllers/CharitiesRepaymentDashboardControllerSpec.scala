@@ -29,12 +29,12 @@ class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
 
   "CharitiesRepaymentDashboardController onPageLoad" should {
     "return 200 OK and render the CharityRepaymentDashboardView view" in {
-      val userId = Some("test-user-123")
+      val userId   = Some("test-user-123")
       val mockView = mock[CharityRepaymentDashboardView]
       when(mockView.apply(eqTo(userId))(any(), any())).thenReturn(Html("<p>Success View</p>"))
 
       val controller = new CharitiesRepaymentDashboardController(cc, fakeAuth(), mockView)
-      val result = controller.onPageLoad(FakeRequest())
+      val result     = controller.onPageLoad(FakeRequest())
 
       status(result) mustBe OK
       contentAsString(result) must include("Success View")

@@ -29,12 +29,12 @@ import views.html.ErrorView
 class AccessDeniedControllerSpec extends ControllerSpecBase {
 
   "AccessDeniedController onPageLoad" should {
-    
+
     "return 403 Forbidden and render the error view" in {
       val accountUrl = "http://example.com/account"
 
       val mockConfig: AppConfig = mock[AppConfig]
-      val mockView: ErrorView = mock[ErrorView]
+      val mockView: ErrorView   = mock[ErrorView]
 
       when(mockConfig.accountUrl).thenReturn(accountUrl)
       when(mockView.apply(eqTo(accountUrl))(any(), any())).thenReturn(Html("<p>Access denied</p>"))

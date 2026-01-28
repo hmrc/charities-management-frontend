@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,9 @@ import play.api.mvc.*
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeClaimsAuthorisedAction @Inject()(cc: ControllerComponents, userType: UserType = Organisation, userReference: String = "test-user-123")
-                                          (using ec: ExecutionContext) extends ClaimsAuthorisedAction {
+class FakeClaimsAuthorisedAction @Inject() (cc: ControllerComponents, userType: UserType = Organisation, userReference: String = "test-user-123")(
+  using ec: ExecutionContext
+) extends ClaimsAuthorisedAction {
 
   override def parser: BodyParser[AnyContent] = cc.parsers.defaultBodyParser
 
@@ -35,4 +36,3 @@ class FakeClaimsAuthorisedAction @Inject()(cc: ControllerComponents, userType: U
     block(authRequest)
   }
 }
-

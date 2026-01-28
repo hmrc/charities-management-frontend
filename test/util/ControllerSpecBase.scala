@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,12 +30,12 @@ import scala.concurrent.ExecutionContext
 trait ControllerSpecBase extends PlaySpec with MockitoSugar with Results {
 
   protected val cc: MessagesControllerComponents = Helpers.stubMessagesControllerComponents()
-  implicit protected val ec: ExecutionContext = cc.executionContext
+  implicit protected val ec: ExecutionContext    = cc.executionContext
 
   protected def fakeAuth(
-                          userType: UserType = Organisation,
-                          userId: String = "test-user-123"
-                        ): FakeClaimsAuthorisedAction =
+    userType: UserType = Organisation,
+    userId: String = "test-user-123"
+  ): FakeClaimsAuthorisedAction =
     new FakeClaimsAuthorisedAction(cc, userType, userId)
 
   protected def html(content: String): Html =

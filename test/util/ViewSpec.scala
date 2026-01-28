@@ -30,7 +30,7 @@ import scala.reflect.ClassTag
 trait ViewSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   implicit lazy val request: Request[AnyContent] = FakeRequest()
-  implicit lazy val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(request)
+  implicit lazy val messages: Messages           = app.injector.instanceOf[MessagesApi].preferred(request)
 
   protected def asDocument(html: play.twirl.api.Html): Document = Jsoup.parse(contentAsString(html))
 

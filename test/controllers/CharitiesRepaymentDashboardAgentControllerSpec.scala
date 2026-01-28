@@ -33,7 +33,7 @@ class CharitiesRepaymentDashboardAgentControllerSpec extends ControllerSpecBase 
       when(mockView.apply()(any(), any())).thenReturn(Html("<p>Success View</p>"))
 
       val controller = new CharitiesRepaymentDashboardAgentController(cc, fakeAuth(), mockView)
-      val result = controller.onPageLoad(FakeRequest())
+      val result     = controller.onPageLoad(FakeRequest())
 
       status(result) mustBe OK
       contentAsString(result) must include("Success View")

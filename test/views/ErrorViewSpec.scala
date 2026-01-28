@@ -22,7 +22,7 @@ import views.html.ErrorView
 
 class ErrorViewSpec extends ViewSpec {
 
-  private val view = injectView[ErrorView]
+  private val view       = injectView[ErrorView]
   private val accountUrl = "https://test-url"
 
   "ErrorView" should {

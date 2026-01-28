@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,13 +46,13 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
       val orgEnrolment = Enrolments(Set(Enrolment("HMRC-CHAR-ORG", Seq(EnrolmentIdentifier("CHARID", "1234567890")), "Activated")))
 
-      when(mockAuthConnector.authorise(any[Predicate], any[Retrieval[Option[AffinityGroup] ~ Enrolments]])(any[HeaderCarrier], any[ExecutionContext])).
-        thenReturn(Future.successful(new~(Some(AffinityGroup.Organisation), orgEnrolment)))
+      when(mockAuthConnector.authorise(any[Predicate], any[Retrieval[Option[AffinityGroup] ~ Enrolments]])(any[HeaderCarrier], any[ExecutionContext]))
+        .thenReturn(Future.successful(new ~(Some(AffinityGroup.Organisation), orgEnrolment)))
 
       val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
 
       val controller = new Harness(authorisedAction)
-      val result = controller.onPageLoad(FakeRequest("GET", "/test"))
+      val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
       status(result) mustBe OK
       contentAsString(result) mustBe "UserType: Organisation, UserReferenceId: 1234567890"
     }
@@ -62,12 +62,12 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
       val agentEnrolment = Enrolments(Set(Enrolment("HMRC-CHAR-AGENT", Seq(EnrolmentIdentifier("AGENTCHARID", "1234567890")), "Activated")))
 
       when(mockAuthConnector.authorise(any[Predicate], any[Retrieval[Option[AffinityGroup] ~ Enrolments]])(any[HeaderCarrier], any[ExecutionContext]))
-        .thenReturn(Future.successful(new~(Some(AffinityGroup.Agent), agentEnrolment)))
+        .thenReturn(Future.successful(new ~(Some(AffinityGroup.Agent), agentEnrolment)))
 
       val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
 
       val controller = new Harness(authorisedAction)
-      val result = controller.onPageLoad(FakeRequest("GET", "/test"))
+      val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
       status(result) mustBe OK
       contentAsString(result) mustBe "UserType: Agent, UserReferenceId: 1234567890"
     }
@@ -76,12 +76,12 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
       when(mockAuthConnector.authorise(any[Predicate], any[Retrieval[Option[AffinityGroup] ~ Enrolments]])(any[HeaderCarrier], any[ExecutionContext]))
-        .thenReturn(Future.successful(new~(Some(AffinityGroup.Individual), Enrolments(Set.empty))))
+        .thenReturn(Future.successful(new ~(Some(AffinityGroup.Individual), Enrolments(Set.empty))))
 
       val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
 
       val controller = new Harness(authorisedAction)
-      val result = controller.onPageLoad(FakeRequest("GET", "/test"))
+      val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
       status(result) mustBe OK
       contentAsString(result) mustBe "UserType: Individual, UserReferenceId: "
     }
@@ -90,12 +90,12 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
       when(mockAuthConnector.authorise(any[Predicate], any[Retrieval[Option[AffinityGroup] ~ Enrolments]])(any[HeaderCarrier], any[ExecutionContext]))
-        .thenReturn(Future.successful(new~(Some(AffinityGroup.Agent), Enrolments(Set.empty))))
+        .thenReturn(Future.successful(new ~(Some(AffinityGroup.Agent), Enrolments(Set.empty))))
 
       val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
 
       val controller = new Harness(authorisedAction)
-      val result = controller.onPageLoad(FakeRequest("GET", "/test")).failed
+      val result     = controller.onPageLoad(FakeRequest("GET", "/test")).failed
       await(result) mustBe UnsupportedAffinityGroup("Agent enrolment missing or not activated")
     }
   }

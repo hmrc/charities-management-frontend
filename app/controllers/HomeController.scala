@@ -25,10 +25,11 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import javax.inject.Inject
 import scala.concurrent.Future
 
-class HomeController @Inject()(
-                                val controllerComponents: MessagesControllerComponents,
-                                authAction: ClaimsAuthorisedAction
-                              ) extends FrontendBaseController with I18nSupport {
+class HomeController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  authAction: ClaimsAuthorisedAction
+) extends FrontendBaseController
+    with I18nSupport {
 
   def landingPage: Action[AnyContent] = authAction.async { implicit request =>
     request.charityUser.userType match {
