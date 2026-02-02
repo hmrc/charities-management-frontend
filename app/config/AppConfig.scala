@@ -22,6 +22,6 @@ import play.api.Configuration
 @Singleton
 class AppConfig @Inject() (config: Configuration):
 
-  val welshLanguageSupportEnabled: Boolean = config.getOptional[Boolean]("features.welsh-language-support").getOrElse(false)
+  val welshLanguageSupportEnabled: Boolean = config.get[Boolean]("enableLanguageSwitching")
 
   lazy val accountUrl: String = config.get[String]("urls.accountUrl")
