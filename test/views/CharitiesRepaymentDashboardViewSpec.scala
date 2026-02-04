@@ -22,65 +22,80 @@ import views.html.CharityRepaymentDashboardView
 
 class CharitiesRepaymentDashboardViewSpec extends ViewSpec {
 
-  private val view = injectView[CharityRepaymentDashboardView]
+  private val view                  = injectView[CharityRepaymentDashboardView]
+  private val makeRepaymentClaimUrl = "/make-repayment-claim"
 
   "CharityRepaymentDashboardView" should {
 
     "render title and heading correctly without reference" in {
-      val doc = asDocument(view(None))
+      val doc = asDocument(view(None, makeRepaymentClaimUrl))
 
       assertTitle(doc, messages("charityRepaymentDashboard.title"))
       assertH1(doc, messages("charityRepaymentDashboard.heading"))
     }
 
     "render the body paragraph" in {
-      val doc = asDocument(view(None))
+      val doc = asDocument(view(None, makeRepaymentClaimUrl))
 
       doc.select("p.govuk-body").first().text() mustBe messages("charityRepaymentDashboard.p")
     }
 
     "render the caption when uReference is provided" in {
       val ref = "ABC123"
-      val doc = asDocument(view(Some(ref)))
+      val doc = asDocument(view(Some(ref), makeRepaymentClaimUrl))
 
-      doc.select("span.govuk-caption-l").text() mustBe messages("charityRepaymentDashboard.caption", ref)
+      doc.select("span.govuk-caption-l").text() mustBe
+        messages("charityRepaymentDashboard.caption", ref)
     }
 
     "not render the caption when uReference is not provided" in {
-      val doc = asDocument(view(None))
+      val doc = asDocument(view(None, makeRepaymentClaimUrl))
 
       doc.select("span.govuk-caption-l").isEmpty mustBe true
     }
 
     "render two cards" in {
-      val doc = asDocument(view(None))
+      val doc = asDocument(view(None, makeRepaymentClaimUrl))
 
       doc.select(".card-group__item").size() mustBe 2
     }
 
     "render the first card with correct title and description" in {
-      val doc = asDocument(view(None))
+      val doc = asDocument(view(None, makeRepaymentClaimUrl))
 
       val firstCard = doc.select(".card-group__item").first()
 
-      firstCard.select(".card__link").text() mustBe messages("charityRepaymentDashboard.card.1.heading")
-      firstCard.select(".card__description").text() mustBe messages("charityRepaymentDashboard.card.1.p")
+      firstCard.select(".card__link").text() mustBe
+        messages("charityRepaymentDashboard.card.1.heading")
+      firstCard.select(".card__description").text() mustBe
+        messages("charityRepaymentDashboard.card.1.p")
     }
 
     "render the second card with correct title and description" in {
-      val doc = asDocument(view(None))
+      val doc = asDocument(view(None, makeRepaymentClaimUrl))
 
       val secondCard = doc.select(".card-group__item").get(1)
 
-      secondCard.select(".card__link").text() mustBe messages("charityRepaymentDashboard.card.2.heading")
-      secondCard.select(".card__description").text() mustBe messages("charityRepaymentDashboard.card.2.p")
+      secondCard.select(".card__link").text() mustBe
+        messages("charityRepaymentDashboard.card.2.heading")
+      secondCard.select(".card__description").text() mustBe
+        messages("charityRepaymentDashboard.card.2.p")
+    }
+
+    "render the link with correct href for the first card" in {
+      val doc = asDocument(view(None, makeRepaymentClaimUrl))
+
+      doc.select(s"a[href='$makeRepaymentClaimUrl']").isEmpty mustBe false
     }
 
     "render the link with correct href for the second card" in {
-      val doc = asDocument(view(None))
+      val doc = asDocument(view(None, makeRepaymentClaimUrl))
 
-      val link = doc.select("a[href='https://www.gov.uk/government/publications/charities-online-commercial-software-suppliers']")
-      link.isEmpty mustBe false
+      doc
+        .select(
+          "a[href='https://www.gov.uk/government/publications/charities-online-commercial-software-suppliers']"
+        )
+        .isEmpty mustBe false
     }
   }
 }

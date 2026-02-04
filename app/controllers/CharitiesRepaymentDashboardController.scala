@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.AppConfig
 import controllers.actions.ClaimsAuthorisedAction
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -27,12 +28,13 @@ import javax.inject.Inject
 class CharitiesRepaymentDashboardController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   authAction: ClaimsAuthorisedAction,
+  config: AppConfig,
   view: CharityRepaymentDashboardView
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = authAction { implicit request =>
-    Ok(view(request.charityUser.referenceId))
+    Ok(view(request.charityUser.referenceId, config.makeCharityRepaymentClaimUrl))
   }
 
 }
