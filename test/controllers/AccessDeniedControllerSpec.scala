@@ -39,7 +39,7 @@ class AccessDeniedControllerSpec extends ControllerSpecBase {
       when(mockConfig.accountUrl).thenReturn(accountUrl)
       when(mockView.apply(eqTo(accountUrl))(any(), any())).thenReturn(Html("<p>Access denied</p>"))
 
-      val controller = new AccessDeniedController(cc, fakeAuth(), mockConfig, mockView)
+      val controller = new AccessDeniedController(cc, mockConfig, mockView)
 
       val result = controller.onPageLoad(FakeRequest())
 

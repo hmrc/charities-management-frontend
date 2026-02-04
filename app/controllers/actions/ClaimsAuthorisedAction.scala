@@ -23,6 +23,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
 import controllers.actions.AuthorisedAction.*
 import models.requests.{AuthorisedRequest, CharityUser, UserType}
+import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
@@ -47,25 +48,29 @@ class DefaultClaimsAuthorisedAction @Inject() (
 
     given HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised().retrieve(Retrievals.affinityGroup.and(Retrievals.allEnrolments)) {
-      case Some(affinityGroup @ (AffinityGroup.Agent | AffinityGroup.Organisation)) ~ enrolments =>
-        val (enrolmentKey, identifierName, userType) =
-          affinityGroup match {
-            case AffinityGroup.Agent        => (AGENT_ENROLMENT_KEY, AGENT_IDENTIFIER_NAME, UserType.Agent)
-            case AffinityGroup.Organisation => (ORG_ENROLMENT_KEY, ORG_IDENTIFIER_NAME, UserType.Organisation)
-          }
+    authorised()
+      .retrieve(Retrievals.affinityGroup.and(Retrievals.allEnrolments)) {
+        case Some(affinityGroup @ (AffinityGroup.Agent | AffinityGroup.Organisation)) ~ enrolments =>
+          val (enrolmentKey, identifierName, userType) =
+            affinityGroup match {
+              case AffinityGroup.Agent        => (AGENT_ENROLMENT_KEY, AGENT_IDENTIFIER_NAME, UserType.Agent)
+              case AffinityGroup.Organisation => (ORG_ENROLMENT_KEY, ORG_IDENTIFIER_NAME, UserType.Organisation)
+            }
 
-        AuthorisedAction
-          .getEnrolmentId(enrolments, enrolmentKey, identifierName)
-          .map { uId =>
-            block(AuthorisedRequest(request, CharityUser(userType, Some(uId))))
-          }
-          .getOrElse {
-            Future.failed(UnsupportedAffinityGroup(s"${userType.toString} enrolment missing or not activated"))
-          }
-      case _ =>
-        block(AuthorisedRequest(request, CharityUser(UserType.Individual, None)))
-    }
+          AuthorisedAction
+            .getEnrolmentId(enrolments, enrolmentKey, identifierName)
+            .map { uId =>
+              block(AuthorisedRequest(request, CharityUser(userType, Some(uId))))
+            }
+            .getOrElse {
+              Future.successful(Redirect(controllers.routes.AccessDeniedController.onPageLoad))
+            }
+        case _ =>
+          block(AuthorisedRequest(request, CharityUser(UserType.Individual, None)))
+      }
+      .recover { case _: AuthorisationException =>
+        Redirect(controllers.routes.AccessDeniedController.onPageLoad)
+      }
   }
 }
 

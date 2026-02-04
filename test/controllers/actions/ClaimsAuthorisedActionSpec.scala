@@ -86,17 +86,73 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
       contentAsString(result) mustBe "UserType: Individual, UserReferenceId: "
     }
 
-    "throw UnsupportedAffinityGroup when provided with incorrect enrolments" in {
+    "redirect to AccessDenied when Agent enrolment is missing" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
-      when(mockAuthConnector.authorise(any[Predicate], any[Retrieval[Option[AffinityGroup] ~ Enrolments]])(any[HeaderCarrier], any[ExecutionContext]))
-        .thenReturn(Future.successful(new ~(Some(AffinityGroup.Agent), Enrolments(Set.empty))))
+      when(
+        mockAuthConnector.authorise(
+          any[Predicate],
+          any[Retrieval[Option[AffinityGroup] ~ Enrolments]]
+        )(any[HeaderCarrier], any[ExecutionContext])
+      ).thenReturn(
+        Future.successful(new ~(Some(AffinityGroup.Agent), Enrolments(Set.empty)))
+      )
 
       val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
+      val controller       = new Harness(authorisedAction)
 
-      val controller = new Harness(authorisedAction)
-      val result     = controller.onPageLoad(FakeRequest("GET", "/test")).failed
-      await(result) mustBe UnsupportedAffinityGroup("Agent enrolment missing or not activated")
+      val result = controller.onPageLoad(FakeRequest("GET", "/test"))
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some(
+        controllers.routes.AccessDeniedController.onPageLoad.url
+      )
+    }
+
+    "redirect to AccessDenied when Organisation enrolment is missing" in {
+      val mockAuthConnector: AuthConnector = mock[AuthConnector]
+
+      when(
+        mockAuthConnector.authorise(
+          any[Predicate],
+          any[Retrieval[Option[AffinityGroup] ~ Enrolments]]
+        )(any[HeaderCarrier], any[ExecutionContext])
+      ).thenReturn(
+        Future.successful(new ~(Some(AffinityGroup.Organisation), Enrolments(Set.empty)))
+      )
+
+      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
+      val controller       = new Harness(authorisedAction)
+
+      val result = controller.onPageLoad(FakeRequest("GET", "/test"))
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some(
+        controllers.routes.AccessDeniedController.onPageLoad.url
+      )
+    }
+
+    "redirect to AccessDenied when authorisation fails" in {
+      val mockAuthConnector: AuthConnector = mock[AuthConnector]
+
+      when(
+        mockAuthConnector.authorise(
+          any[Predicate],
+          any[Retrieval[Option[AffinityGroup] ~ Enrolments]]
+        )(any[HeaderCarrier], any[ExecutionContext])
+      ).thenReturn(
+        Future.failed(new BearerTokenExpired)
+      )
+
+      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
+      val controller       = new Harness(authorisedAction)
+
+      val result = controller.onPageLoad(FakeRequest("GET", "/test"))
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some(
+        controllers.routes.AccessDeniedController.onPageLoad.url
+      )
     }
   }
 }
