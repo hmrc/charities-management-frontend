@@ -1,5 +1,15 @@
 # microservice specific routes
 
-->         /hmrc-frontend           hmrcfrontend.Routes
-GET        /                        uk.gov.hmrc.charitiesmanagementfrontend.controllers.HelloWorldController.helloWorld
+->          /hmrc-frontend                            hmrcfrontend.Routes
+
+GET         /assets/*file                             controllers.Assets.versioned(path="/public", file: Asset)
+
+GET         /                                         controllers.HomeController.landingPage
+
+GET        /charity-repayment-dashboard               controllers.CharitiesRepaymentDashboardController.onPageLoad
+
+GET        /charity-repayment-dashboard-agent         controllers.CharitiesRepaymentDashboardAgentController.onPageLoad
+
+GET        /there-is-a-problem-access-denied          controllers.AccessDeniedController.onPageLoad
+
 GET        /assets/*file            controllers.Assets.versioned(path = "/public", file: Asset)

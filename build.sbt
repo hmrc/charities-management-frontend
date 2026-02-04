@@ -1,3 +1,4 @@
+import play.sbt.PlayImport.PlayKeys.playDefaultPort
 import uk.gov.hmrc.DefaultBuildSettings
 
 ThisBuild / majorVersion := 0
@@ -14,6 +15,8 @@ lazy val microservice = Project("charities-management-frontend", file("."))
     scalacOptions += "-Wconf:src=routes/.*:s",
     scalacOptions += "-Wconf:msg=unused import&src=html/.*:s",
     pipelineStages := Seq(gzip),
+    playDefaultPort := 8033,
+    scalafmtOnCompile := true
   )
   .settings(CodeCoverageSettings.settings: _*)
 

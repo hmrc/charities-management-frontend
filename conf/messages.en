@@ -1,0 +1,24 @@
+service.name = Charities Management
+service.text = This is your new service
+
+#Charity Repayment Organisation Landing Page
+charityRepaymentDashboard.title = Charity repayment dashboard - Charities - GOV.UK
+charityRepaymentDashboard.heading = Charity repayment dashboard
+charityRepaymentDashboard.caption = HMRC Charities reference: {0}
+charityRepaymentDashboard.p = Before you make a claim, complete and save any schedule spreadsheets.
+charityRepaymentDashboard.card.1.heading = Make a repayment claim
+charityRepaymentDashboard.card.1.p = Use this to make a repayment claim.
+charityRepaymentDashboard.card.2.heading = Make a repayment claim using software
+charityRepaymentDashboard.card.2.p = Use this to make a charity repayment claim using software, like a database.
+
+#Error Page
+error.title = Sorry, there is a problem with the service - Charities - GOV.UK
+error.heading = Sorry, there is a problem with the service
+error.p = You do not have access to this service.
+error.signInLink = Continue to your account
+
+#Charity Repayment Agent Landing Page
+charityRepaymentDashboardAgent.title = Charity repayment dashboard for agents
+charityRepaymentDashboardAgent.heading = Charity repayment dashboard for agents
+
+
