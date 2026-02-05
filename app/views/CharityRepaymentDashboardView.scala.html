@@ -21,7 +21,7 @@
     layout: templates.Layout
 )
 
-@(uReference: Option[String])(implicit request:Request[?], messages: Messages)
+@(uReference: Option[String], makeRepaymentClaimUrl: String)(implicit request:Request[?], messages: Messages)
 
 @layout(pageTitle = Some(messages("charityRepaymentDashboard.title"))) {
 
@@ -38,7 +38,7 @@
             Seq(
                 Card(
                         title = messages("charityRepaymentDashboard.card.1.heading"),
-                        href = "#",
+                        href = makeRepaymentClaimUrl,
                         description = Some(messages("charityRepaymentDashboard.card.1.p"))
                 ),
                 Card(

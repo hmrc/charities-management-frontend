@@ -39,6 +39,14 @@
 
 @hmrcStandardPage(
   HmrcStandardPageParams(
+    serviceURLs = ServiceURLs(
+        serviceUrl = None,
+        signOutUrl = Some(appConfig.signOutUrl),
+        accessibilityStatementUrl = None
+    ),
+    banners = Banners(
+        userResearchBanner = Some(UserResearchBanner(url = appConfig.researchUrl))
+    ),
     pageTitle = pageTitle,
     isWelshTranslationAvailable = appConfig.welshLanguageSupportEnabled,
     backLink = { if(showBackLink) Some(BackLink.mimicsBrowserBackButtonViaJavaScript) else None },
