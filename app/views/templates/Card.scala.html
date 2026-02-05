@@ -17,22 +17,33 @@
 @(title: String,
 href: String,
 description: Option[String] = None,
-extraClasses: String = ""
+extraClasses: String = "",
+openInNewTab: Boolean = false
 )
 
 <div class="card card--clickable @extraClasses">
 
     <h2 class="govuk-heading-m card__heading">
-        <span class="govuk-visually-hidden">(opens in new tab)</span>
-        <a class="govuk-link card__link govuk-link--no-visited-state card__link--block"
-           href="@href" target="_blank" rel="noopener noreferrer">
-            @title
-        </a>
+        @if(openInNewTab) {
+            <span class="govuk-visually-hidden">(opens in new tab)</span>
+
+            <a class="govuk-link card__link govuk-link--no-visited-state card__link--block"
+               href="@href"
+               target="_blank"
+               rel="noopener noreferrer">
+                @title
+            </a>
+        } else {
+            <a class="govuk-link card__link govuk-link--no-visited-state card__link--block"
+               href="@href">
+                @title
+            </a>
+        }
     </h2>
 
     @description.map { text =>
-    <p class="govuk-body card__description">
-        @text
-    </p>
+        <p class="govuk-body card__description">
+            @text
+        </p>
     }
 </div>
