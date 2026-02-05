@@ -27,3 +27,11 @@ class AppConfig @Inject() (config: Configuration):
   lazy val accountUrl: String = config.get[String]("urls.accountUrl")
 
   lazy val makeCharityRepaymentClaimUrl: String = config.get[String]("urls.makeCharityRepaymentClaimUrl")
+
+  lazy val signOutUrl: String = config.get[String]("urls.signOut")
+
+  lazy val loginUrl: String = config.get[String]("urls.login")
+
+  lazy val loginContinueUrl: String = config.get[String]("urls.loginContinue")
+
+  lazy val researchUrl: String = config.get[String]("urls.researchUrl")

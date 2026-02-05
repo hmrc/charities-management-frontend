@@ -28,6 +28,7 @@ import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 import util.BaseSpec
+import config.AppConfig
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,6 +42,11 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
 
   val bodyParser: BodyParsers.Default = BodyParsers.Default(Helpers.stubPlayBodyParsers)
 
+  private val mockConfig = mock[AppConfig]
+
+  when(mockConfig.loginUrl).thenReturn("/login")
+  when(mockConfig.loginContinueUrl).thenReturn("/continue")
+
   "AuthorisedAction" should {
     "create AuthorisedRequest when user has an Organisation affinity group" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
@@ -49,7 +55,7 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
       when(mockAuthConnector.authorise(any[Predicate], any[Retrieval[Option[AffinityGroup] ~ Enrolments]])(any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(Future.successful(new ~(Some(AffinityGroup.Organisation), orgEnrolment)))
 
-      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
+      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, mockConfig, bodyParser)
 
       val controller = new Harness(authorisedAction)
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
@@ -64,7 +70,7 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
       when(mockAuthConnector.authorise(any[Predicate], any[Retrieval[Option[AffinityGroup] ~ Enrolments]])(any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(Future.successful(new ~(Some(AffinityGroup.Agent), agentEnrolment)))
 
-      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
+      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, mockConfig, bodyParser)
 
       val controller = new Harness(authorisedAction)
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
@@ -78,7 +84,7 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
       when(mockAuthConnector.authorise(any[Predicate], any[Retrieval[Option[AffinityGroup] ~ Enrolments]])(any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(Future.successful(new ~(Some(AffinityGroup.Individual), Enrolments(Set.empty))))
 
-      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
+      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, mockConfig, bodyParser)
 
       val controller = new Harness(authorisedAction)
       val result     = controller.onPageLoad(FakeRequest("GET", "/test"))
@@ -98,7 +104,7 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
         Future.successful(new ~(Some(AffinityGroup.Agent), Enrolments(Set.empty)))
       )
 
-      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
+      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, mockConfig, bodyParser)
       val controller       = new Harness(authorisedAction)
 
       val result = controller.onPageLoad(FakeRequest("GET", "/test"))
@@ -121,7 +127,7 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
         Future.successful(new ~(Some(AffinityGroup.Organisation), Enrolments(Set.empty)))
       )
 
-      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
+      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, mockConfig, bodyParser)
       val controller       = new Harness(authorisedAction)
 
       val result = controller.onPageLoad(FakeRequest("GET", "/test"))
@@ -132,7 +138,7 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
       )
     }
 
-    "redirect to AccessDenied when authorisation fails" in {
+    "redirect to login when authorisation fails" in {
       val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
       when(
@@ -144,15 +150,13 @@ class ClaimsAuthorisedActionSpec extends BaseSpec {
         Future.failed(new BearerTokenExpired)
       )
 
-      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, bodyParser)
+      val authorisedAction = new DefaultClaimsAuthorisedAction(mockAuthConnector, mockConfig, bodyParser)
       val controller       = new Harness(authorisedAction)
 
       val result = controller.onPageLoad(FakeRequest("GET", "/test"))
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(
-        controllers.routes.AccessDeniedController.onPageLoad.url
-      )
+      redirectLocation(result) mustBe Some("/login?continue=%2Fcontinue")
     }
   }
 }

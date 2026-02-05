@@ -17,6 +17,7 @@
 package controllers.actions
 
 import com.google.inject.ImplementedBy
+import config.AppConfig
 import play.api.mvc.*
 import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
@@ -36,6 +37,7 @@ trait ClaimsAuthorisedAction extends ActionBuilder[AuthorisedRequest, AnyContent
 @Singleton
 class DefaultClaimsAuthorisedAction @Inject() (
   override val authConnector: AuthConnector,
+  val config: AppConfig,
   val parser: BodyParsers.Default
 )(implicit val executionContext: ExecutionContext)
     extends ClaimsAuthorisedAction
@@ -69,7 +71,7 @@ class DefaultClaimsAuthorisedAction @Inject() (
           block(AuthorisedRequest(request, CharityUser(UserType.Individual, None)))
       }
       .recover { case _: AuthorisationException =>
-        Redirect(controllers.routes.AccessDeniedController.onPageLoad)
+        Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
       }
   }
 }

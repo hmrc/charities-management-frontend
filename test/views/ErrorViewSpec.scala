@@ -22,9 +22,8 @@ import views.html.ErrorView
 
 class ErrorViewSpec extends ViewSpec {
 
-  private val view = injectView[ErrorView]
-//  private val accountUrl = "https://test-url"
-  private val accountUrl = "/charities-management/hmrc-frontend/language/cy"
+  private val view       = injectView[ErrorView]
+  private val accountUrl = "https://test-url"
 
   "ErrorView" should {
 
@@ -44,7 +43,9 @@ class ErrorViewSpec extends ViewSpec {
     "render the sign-in link with correct href" in {
       val doc = asDocument(view(accountUrl))
 
-      doc.select("a.govuk-link").attr("href") mustBe accountUrl
+      doc
+        .select(s"a:contains(${messages("error.signInLink")})")
+        .attr("href") mustBe accountUrl
     }
 
     "not render a back link" in {
