@@ -21,14 +21,6 @@ extraClasses: String = "",
 openInNewTab: Boolean = true
 )
 
-@linkAttributes = @{
-    if(openInNewTab) {
-    Html("""target="_blank" rel="noopener noreferrer"""")
-} else {
-    Html("")
-    }
-}
-
 <div class="card card--clickable @extraClasses">
 
     <h2 class="govuk-heading-m card__heading">
