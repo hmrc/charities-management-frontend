@@ -21,4 +21,8 @@ error.signInLink = Continue to your account
 charityRepaymentDashboardAgent.title = Charity repayment dashboard for agents
 charityRepaymentDashboardAgent.heading = Charity repayment dashboard for agents
 
+#Timeout dialog
+session-expired.keep-alive-button-text=Continue
+session-expired.sign-out-button-text=Sign-out
+session-expired-message=For your security, we will time you out in
 

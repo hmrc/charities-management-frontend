@@ -35,3 +35,7 @@ class AppConfig @Inject() (config: Configuration):
   lazy val loginContinueUrl: String = config.get[String]("urls.loginContinue")
 
   lazy val researchUrl: String = config.get[String]("urls.researchUrl")
+
+  lazy val homePageUrl: String = config.get[String]("urls.homePageUrl")
+
+  lazy val accessibilityStatementUrl: String = config.get[String]("urls.accessibilityStatementUrl")
