@@ -104,5 +104,23 @@ class OrgClaimsAuthorisedActionSpec extends BaseSpec {
         controllers.routes.AccessDeniedController.onPageLoad.url
       )
     }
+
+    "redirect to login when authorisation fails" in {
+      val mockAuthConnector = mock[AuthConnector]
+
+      when(
+        mockAuthConnector.authorise(any(), any())(any(), any())
+      ).thenReturn(Future.failed(InsufficientEnrolments("Insufficient Enrolment")))
+
+      val action     = new OrgClaimsAuthorisedAction(mockAuthConnector, mockConfig, bodyParser)
+      val controller = new Harness(action)
+
+      val result = controller.onPageLoad(FakeRequest())
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some(
+        "/login?continue=%2Fcontinue"
+      )
+    }
   }
 }
