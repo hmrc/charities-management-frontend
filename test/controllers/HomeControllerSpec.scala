@@ -24,6 +24,8 @@ import util.ControllerSpecBase
 
 class HomeControllerSpec extends ControllerSpecBase {
 
+  private val request: FakeRequest[AnyContent] = FakeRequest(GET, "/")
+
   "HomeController landingPage" should {
 
     "redirect to CharitiesRepaymentDashboardController for Organisation users" in {
@@ -50,9 +52,6 @@ class HomeControllerSpec extends ControllerSpecBase {
         controllers.routes.AccessDeniedController.onPageLoad.url
     }
   }
-
-  private val request: FakeRequest[AnyContent] =
-    FakeRequest(GET, "/")
 
   private def controllerAsOrg: HomeController =
     new HomeController(cc, fakeOrg())

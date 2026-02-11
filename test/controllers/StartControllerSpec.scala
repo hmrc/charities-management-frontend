@@ -24,6 +24,10 @@ import util.ControllerSpecBase
 
 class StartControllerSpec extends ControllerSpecBase {
 
+  val request: FakeRequest[AnyContent] = FakeRequest(GET, "/")
+
+  val controller: StartController = new StartController(cc, fakeOrg())
+
   "StartController" should {
 
     "redirect to landing page when start is called" in {
@@ -48,13 +52,4 @@ class StartControllerSpec extends ControllerSpecBase {
         controllers.routes.StartController.start.url
     }
   }
-
-  private val request: FakeRequest[AnyContent] =
-    FakeRequest(GET, "/")
-
-  private lazy val controller: StartController =
-    new StartController(
-      cc,
-      fakeOrg()
-    )
 }

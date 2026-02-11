@@ -32,15 +32,9 @@ class CharitiesRepaymentDashboardAgentControllerSpec extends ControllerSpecBase 
     "return 200 OK and render the CharityRepaymentDashboardAgentView view" in {
       val mockView = mock[CharityRepaymentDashboardAgentView]
 
-      when(mockView.apply()(any(), any()))
-        .thenReturn(html("<p>Success View</p>"))
+      when(mockView.apply()(any(), any())).thenReturn(html("<p>Success View</p>"))
 
-      val controller =
-        new CharitiesRepaymentDashboardAgentController(
-          cc,
-          fakeAgent(), // agent-authorised user
-          mockView
-        )
+      val controller = new CharitiesRepaymentDashboardAgentController(cc, fakeAgent(), mockView)
 
       val result = controller.onPageLoad(FakeRequest())
 

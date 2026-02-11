@@ -29,17 +29,13 @@ import scala.concurrent.ExecutionContext
 
 trait ControllerSpecBase extends PlaySpec with MockitoSugar with Results {
 
-  protected val cc: MessagesControllerComponents =
-    Helpers.stubMessagesControllerComponents()
+  protected val cc: MessagesControllerComponents = Helpers.stubMessagesControllerComponents()
 
-  implicit protected val ec: ExecutionContext =
-    cc.executionContext
+  implicit protected val ec: ExecutionContext = cc.executionContext
 
-  // Core fake (single source of truth)
   protected def fakeAuthorised(user: CharityUser): FakeClaimsAuthorisedAction =
     new FakeClaimsAuthorisedAction(user)
 
-  // Convenience helpers
   protected def fakeAgent(id: String = "test-agent-id"): FakeClaimsAuthorisedAction =
     fakeAuthorised(CharityUser(UserType.Agent, Some(id)))
 
