@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.actions.ClaimsAuthorisedAction
+import controllers.actions.IdentifyAuthorisedAction
 import models.requests.UserType.{Agent, Organisation}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -27,11 +27,11 @@ import scala.concurrent.Future
 
 class HomeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  authAction: ClaimsAuthorisedAction
+  identifyUser: IdentifyAuthorisedAction
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def landingPage: Action[AnyContent] = authAction.async { implicit request =>
+  def landingPage: Action[AnyContent] = identifyUser.async { implicit request =>
     request.charityUser.userType match {
       case Organisation =>
         Future.successful(Redirect(controllers.routes.CharitiesRepaymentDashboardController.onPageLoad))

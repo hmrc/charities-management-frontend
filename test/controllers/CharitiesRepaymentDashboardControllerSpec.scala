@@ -29,18 +29,21 @@ import views.html.CharityRepaymentDashboardView
 class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
 
   "CharitiesRepaymentDashboardController onPageLoad" should {
+
     "return 200 OK and render the CharityRepaymentDashboardView view" in {
       val mockConfig: AppConfig = mock[AppConfig]
-      val userId                = Some("test-user-123")
+      val orgId                 = "test-user-123"
       val mockView              = mock[CharityRepaymentDashboardView]
-      when(mockView.apply(eqTo(userId), any())(any(), any())).thenReturn(Html("<p>Success View</p>"))
 
-      val controller = new CharitiesRepaymentDashboardController(cc, fakeAuth(), mockConfig, mockView)
-      val result     = controller.onPageLoad(FakeRequest())
+      when(mockView.apply(eqTo(Some(orgId)), any())(any(), any())).thenReturn(Html("<p>Success View</p>"))
+
+      val controller = new CharitiesRepaymentDashboardController(cc, fakeOrg(orgId), mockConfig, mockView)
+
+      val result = controller.onPageLoad(FakeRequest())
 
       status(result) mustBe OK
       contentAsString(result) must include("Success View")
-      verify(mockView).apply(eqTo(userId), any())(any(), any())
+      verify(mockView).apply(eqTo(Some(orgId)), any())(any(), any())
     }
   }
 }

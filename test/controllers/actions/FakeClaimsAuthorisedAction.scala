@@ -16,23 +16,46 @@
 
 package controllers.actions
 
-import com.google.inject.Inject
-import models.requests.UserType.*
 import models.requests.{AuthorisedRequest, CharityUser, UserType}
 import play.api.mvc.*
+import play.api.test.Helpers.stubBodyParser
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeClaimsAuthorisedAction @Inject() (cc: ControllerComponents, userType: UserType = Organisation, userReference: String = "test-user-123")(
-  using ec: ExecutionContext
-) extends ClaimsAuthorisedAction {
+class FakeClaimsAuthorisedAction(
+  user: CharityUser
+)(implicit ec: ExecutionContext)
+    extends ActionBuilder[AuthorisedRequest, AnyContent]
+    with OrgAuthorisedAction
+    with AgentAuthorisedAction
+    with IdentifyAuthorisedAction {
 
-  override def parser: BodyParser[AnyContent] = cc.parsers.defaultBodyParser
+  override def parser: BodyParser[AnyContent] =
+    stubBodyParser(AnyContentAsEmpty)
 
   override protected def executionContext: ExecutionContext = ec
 
-  override def invokeBlock[A](request: Request[A], block: AuthorisedRequest[A] => Future[Result]): Future[Result] = {
-    val authRequest = new AuthorisedRequest[A](request, CharityUser(userType, Some(userReference)))
-    block(authRequest)
-  }
+  override def invokeBlock[A](
+    request: Request[A],
+    block: AuthorisedRequest[A] => Future[Result]
+  ): Future[Result] =
+    block(AuthorisedRequest(request, user))
+}
+
+object FakeAuthorisedAction {
+
+  def agent(id: String = "agent-id")(implicit ec: ExecutionContext) =
+    new FakeClaimsAuthorisedAction(
+      CharityUser(UserType.Agent, Some(id))
+    )
+
+  def org(id: String = "org-id")(implicit ec: ExecutionContext) =
+    new FakeClaimsAuthorisedAction(
+      CharityUser(UserType.Organisation, Some(id))
+    )
+
+  def individual(implicit ec: ExecutionContext) =
+    new FakeClaimsAuthorisedAction(
+      CharityUser(UserType.Individual, None)
+    )
 }

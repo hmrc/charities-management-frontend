@@ -18,7 +18,12 @@ package config
 
 import play.api.{Configuration, Environment}
 import play.api.inject.{Binding, Module as AppModule}
-
+import controllers.actions.OrgClaimsAuthorisedAction
+import controllers.actions.OrgAuthorisedAction
+import controllers.actions.AgentClaimsAuthorisedAction
+import controllers.actions.AgentAuthorisedAction
+import controllers.actions.IdentifyAuthorisedAction
+import controllers.actions.IdentifyClaimsAuthAction
 import java.time.Clock
 
 class Module extends AppModule:
@@ -27,5 +32,9 @@ class Module extends AppModule:
     environment: Environment,
     configuration: Configuration
   ): Seq[Binding[_]] =
-    bind[Clock].toInstance(Clock.systemDefaultZone) :: // inject if current time needs to be controlled in unit tests
-      Nil
+    Seq(
+      bind[Clock].toInstance(Clock.systemDefaultZone),
+      bind[OrgAuthorisedAction].to[OrgClaimsAuthorisedAction],
+      bind[AgentAuthorisedAction].to[AgentClaimsAuthorisedAction],
+      bind[IdentifyAuthorisedAction].to[IdentifyClaimsAuthAction]
+    )
