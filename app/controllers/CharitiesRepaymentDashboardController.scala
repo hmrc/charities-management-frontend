@@ -16,8 +16,9 @@
 
 package controllers
 
+import com.google.inject.name.Named
 import config.AppConfig
-import controllers.actions.OrgAuthorisedAction
+import controllers.actions.BaseAuthorisedAction
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -27,7 +28,7 @@ import javax.inject.Inject
 
 class CharitiesRepaymentDashboardController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  orgAuth: OrgAuthorisedAction,
+  @Named("orgAuth") orgAuth: BaseAuthorisedAction,
   config: AppConfig,
   view: CharityRepaymentDashboardView
 ) extends FrontendBaseController

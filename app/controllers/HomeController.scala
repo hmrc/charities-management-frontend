@@ -16,7 +16,8 @@
 
 package controllers
 
-import controllers.actions.IdentifyAuthorisedAction
+import com.google.inject.name.Named
+import controllers.actions.BaseAuthorisedAction
 import models.requests.UserType.{Agent, Organisation}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -27,7 +28,7 @@ import scala.concurrent.Future
 
 class HomeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  identifyUser: IdentifyAuthorisedAction
+  @Named("identifyAuth") identifyUser: BaseAuthorisedAction
 ) extends FrontendBaseController
     with I18nSupport {
 

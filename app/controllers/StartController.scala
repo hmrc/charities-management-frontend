@@ -17,14 +17,15 @@
 package controllers
 
 import com.google.inject.Inject
-import controllers.actions.IdentifyAuthorisedAction
+import com.google.inject.name.Named
+import controllers.actions.BaseAuthorisedAction
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 class StartController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  authorisedAction: IdentifyAuthorisedAction
+  @Named("identifyAuth") authorisedAction: BaseAuthorisedAction
 ) extends FrontendBaseController
     with I18nSupport {
 

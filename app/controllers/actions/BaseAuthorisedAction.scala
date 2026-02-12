@@ -26,7 +26,7 @@ import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{Inject, Named, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 trait BaseAuthorisedAction
@@ -58,20 +58,14 @@ trait BaseAuthorisedAction
   }
 }
 
-trait OrgAuthorisedAction extends ActionBuilder[AuthorisedRequest, AnyContent]
-
-trait AgentAuthorisedAction extends ActionBuilder[AuthorisedRequest, AnyContent]
-
-trait IdentifyAuthorisedAction extends ActionBuilder[AuthorisedRequest, AnyContent]
-
 @Singleton
+@Named("agentAuth")
 class AgentClaimsAuthorisedAction @Inject() (
   override val authConnector: AuthConnector,
   override val config: AppConfig,
   override val parser: BodyParsers.Default
 )(implicit override val executionContext: ExecutionContext)
-    extends BaseAuthorisedAction
-    with AgentAuthorisedAction {
+    extends BaseAuthorisedAction {
 
   override def invokeBlock[A](
     request: Request[A],
@@ -90,13 +84,13 @@ class AgentClaimsAuthorisedAction @Inject() (
 }
 
 @Singleton
+@Named("orgAuth")
 class OrgClaimsAuthorisedAction @Inject() (
   override val authConnector: AuthConnector,
   override val config: AppConfig,
   override val parser: BodyParsers.Default
 )(implicit override val executionContext: ExecutionContext)
-    extends BaseAuthorisedAction
-    with OrgAuthorisedAction {
+    extends BaseAuthorisedAction {
 
   override def invokeBlock[A](
     request: Request[A],
@@ -115,13 +109,13 @@ class OrgClaimsAuthorisedAction @Inject() (
 }
 
 @Singleton
+@Named("identifyAuth")
 class IdentifyClaimsAuthAction @Inject() (
   override val authConnector: AuthConnector,
   override val config: AppConfig,
   override val parser: BodyParsers.Default
 )(implicit override val executionContext: ExecutionContext)
-    extends BaseAuthorisedAction
-    with IdentifyAuthorisedAction {
+    extends BaseAuthorisedAction {
 
   override def invokeBlock[A](
     request: Request[A],
