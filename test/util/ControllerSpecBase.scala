@@ -17,13 +17,12 @@
 package util
 
 import controllers.actions.*
-import models.requests.UserType
+import models.requests.{CharityUser, UserType}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.mvc.*
 import play.api.test.Helpers
 import play.twirl.api.Html
-import models.requests.CharityUser
 
 import scala.concurrent.ExecutionContext
 
@@ -34,7 +33,7 @@ trait ControllerSpecBase extends PlaySpec with MockitoSugar with Results {
   implicit protected val ec: ExecutionContext = cc.executionContext
 
   protected def fakeAuthorised(user: CharityUser): FakeClaimsAuthorisedAction =
-    new FakeClaimsAuthorisedAction(user)
+    new FakeClaimsAuthorisedAction(cc, user)
 
   protected def fakeAgent(id: String = "test-agent-id"): FakeClaimsAuthorisedAction =
     fakeAuthorised(CharityUser(UserType.Agent, Some(id)))

@@ -36,7 +36,7 @@ trait BaseAuthorisedAction
 
   def authConnector: AuthConnector
   def config: AppConfig
-  def parser: BodyParsers.Default
+  def parser: BodyParser[AnyContent]
   implicit def executionContext: ExecutionContext
 
   private def hc(implicit req: Request[?]): HeaderCarrier =

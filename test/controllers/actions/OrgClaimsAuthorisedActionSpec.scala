@@ -32,7 +32,7 @@ import scala.concurrent.Future
 
 class OrgClaimsAuthorisedActionSpec extends BaseSpec {
 
-  class Harness(action: BaseAuthorisedAction) {
+  class Harness(action: OrgClaimsAuthorisedAction) {
     def onPageLoad: Action[AnyContent] =
       action { request =>
         Results.Ok(

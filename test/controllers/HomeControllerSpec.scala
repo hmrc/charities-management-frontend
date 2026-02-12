@@ -21,31 +21,33 @@ import play.api.mvc.AnyContent
 import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
 import util.ControllerSpecBase
+import models.requests.UserType
 
 class HomeControllerSpec extends ControllerSpecBase {
 
-  private val request: FakeRequest[AnyContent] = FakeRequest(GET, "/")
+  private val request: FakeRequest[AnyContent] =
+    FakeRequest(GET, "/")
 
   "HomeController landingPage" should {
 
-    "redirect to CharitiesRepaymentDashboardController for Organisation users" in {
-      val result = controllerAsOrg.landingPage(request)
+    "redirect Organisation users to the organisation dashboard" in {
+      val result = controller(UserType.Organisation).landingPage(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
         controllers.routes.CharitiesRepaymentDashboardController.onPageLoad.url
     }
 
-    "redirect to CharitiesRepaymentDashboardAgentController for Agent users" in {
-      val result = controllerAsAgent.landingPage(request)
+    "redirect Agent users to the agent dashboard" in {
+      val result = controller(UserType.Agent).landingPage(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
         controllers.routes.CharitiesRepaymentDashboardAgentController.onPageLoad.url
     }
 
-    "redirect to AccessDeniedController for unsupported user types i.e Individual" in {
-      val result = controllerAsIndividual.landingPage(request)
+    "redirect Individual users to access denied" in {
+      val result = controller(UserType.Individual).landingPage(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
@@ -53,12 +55,18 @@ class HomeControllerSpec extends ControllerSpecBase {
     }
   }
 
-  private def controllerAsOrg: HomeController =
-    new HomeController(cc, fakeOrg())
+  // --------------------------------------------------------------------------
 
-  private def controllerAsAgent: HomeController =
-    new HomeController(cc, fakeAgent())
+  private def controller(userType: UserType): HomeController =
+    new HomeController(
+      cc,
+      authorisedAction(userType)
+    )
 
-  private def controllerAsIndividual: HomeController =
-    new HomeController(cc, fakeIndividual)
+  private def authorisedAction(userType: UserType) =
+    userType match {
+      case UserType.Agent        => fakeAgent()
+      case UserType.Organisation => fakeOrg()
+      case UserType.Individual   => fakeIndividual
+    }
 }
