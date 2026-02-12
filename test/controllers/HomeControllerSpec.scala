@@ -55,8 +55,6 @@ class HomeControllerSpec extends ControllerSpecBase {
     }
   }
 
-  // --------------------------------------------------------------------------
-
   private def controller(userType: UserType): HomeController =
     new HomeController(
       cc,
