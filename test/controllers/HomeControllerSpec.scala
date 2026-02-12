@@ -16,55 +16,55 @@
 
 package controllers
 
-import controllers.HomeControllerSpec.Fixture
-import controllers.actions.FakeClaimsAuthorisedAction
-import models.requests.UserType
-import models.requests.UserType.{Agent, Organisation}
 import org.scalatestplus.play.PlaySpec
 import play.api.mvc.AnyContent
 import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
 import util.ControllerSpecBase
-
-import scala.concurrent.ExecutionContext.Implicits.global
+import models.requests.UserType
 
 class HomeControllerSpec extends ControllerSpecBase {
 
+  private val request: FakeRequest[AnyContent] =
+    FakeRequest(GET, "/")
+
   "HomeController landingPage" should {
-    "redirect to CharitiesRepaymentDashboardController for Organisation users" in new Fixture {
-      private val result = controller(Organisation).landingPage(request)
+
+    "redirect Organisation users to the organisation dashboard" in {
+      val result = controller(UserType.Organisation).landingPage(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
         controllers.routes.CharitiesRepaymentDashboardController.onPageLoad.url
     }
 
-    "redirect to CharitiesRepaymentDashboardAgentController for Agent users" in new Fixture {
-      private val result = controller(Agent).landingPage(request)
+    "redirect Agent users to the agent dashboard" in {
+      val result = controller(UserType.Agent).landingPage(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
         controllers.routes.CharitiesRepaymentDashboardAgentController.onPageLoad.url
     }
 
-    "redirect to AccessDeniedController for unsupported user types i.e Individual" in new Fixture {
-      private val result = controller(UserType.Individual).landingPage(request)
+    "redirect Individual users to access denied" in {
+      val result = controller(UserType.Individual).landingPage(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
         controllers.routes.AccessDeniedController.onPageLoad.url
     }
   }
-}
 
-object HomeControllerSpec {
+  private def controller(userType: UserType): HomeController =
+    new HomeController(
+      cc,
+      authorisedAction(userType)
+    )
 
-  trait Fixture {
-    private val cc = Helpers.stubMessagesControllerComponents()
-
-    def controller(userType: UserType): HomeController =
-      new HomeController(cc, new FakeClaimsAuthorisedAction(cc, userType, "test-user-123"))
-
-    val request: FakeRequest[AnyContent] = FakeRequest(GET, "/")
-  }
+  private def authorisedAction(userType: UserType) =
+    userType match {
+      case UserType.Agent        => fakeAgent()
+      case UserType.Organisation => fakeOrg()
+      case UserType.Individual   => fakeIndividual
+    }
 }

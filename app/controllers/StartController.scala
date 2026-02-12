@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,26 @@
 
 package controllers
 
+import com.google.inject.Inject
 import com.google.inject.name.Named
-import config.AppConfig
 import controllers.actions.BaseAuthorisedAction
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.CharityRepaymentDashboardView
 
-import javax.inject.Inject
-
-class CharitiesRepaymentDashboardController @Inject() (
+class StartController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  @Named("orgAuth") orgAuth: BaseAuthorisedAction,
-  config: AppConfig,
-  view: CharityRepaymentDashboardView
+  @Named("identifyAuth") authorisedAction: BaseAuthorisedAction
 ) extends FrontendBaseController
     with I18nSupport {
-  def onPageLoad: Action[AnyContent] = orgAuth { implicit request =>
-    Ok(view(request.charityUser.referenceId, config.makeCharityRepaymentClaimUrl))
-  }
+
+  val start: Action[AnyContent] =
+    Action(_ => Redirect(controllers.routes.HomeController.landingPage))
+
+  val keepAlive: Action[AnyContent] =
+    authorisedAction(_ => Ok)
+
+  val timedOut: Action[AnyContent] =
+    Action(implicit request => Redirect(routes.StartController.start.url))
+
 }

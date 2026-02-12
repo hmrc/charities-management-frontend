@@ -16,23 +16,60 @@
 
 package controllers.actions
 
-import com.google.inject.Inject
-import models.requests.UserType.*
+import config.AppConfig
 import models.requests.{AuthorisedRequest, CharityUser, UserType}
+import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.mvc.*
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeClaimsAuthorisedAction @Inject() (cc: ControllerComponents, userType: UserType = Organisation, userReference: String = "test-user-123")(
-  using ec: ExecutionContext
-) extends ClaimsAuthorisedAction {
+class FakeClaimsAuthorisedAction(
+  cc: ControllerComponents,
+  user: CharityUser
+)(implicit ec: ExecutionContext)
+    extends BaseAuthorisedAction {
+
+  override val authConnector: AuthConnector = mock[AuthConnector]
+
+  override val config: AppConfig = mock[AppConfig]
 
   override def parser: BodyParser[AnyContent] = cc.parsers.defaultBodyParser
 
-  override protected def executionContext: ExecutionContext = ec
+  override implicit def executionContext: ExecutionContext = ec
 
-  override def invokeBlock[A](request: Request[A], block: AuthorisedRequest[A] => Future[Result]): Future[Result] = {
-    val authRequest = new AuthorisedRequest[A](request, CharityUser(userType, Some(userReference)))
-    block(authRequest)
-  }
+  override def invokeBlock[A](
+    request: Request[A],
+    block: AuthorisedRequest[A] => Future[Result]
+  ): Future[Result] =
+    block(AuthorisedRequest(request, user))
+}
+
+object FakeAuthorisedAction {
+
+  def agent(
+    cc: ControllerComponents,
+    id: String = "agent-id"
+  )(implicit ec: ExecutionContext): FakeClaimsAuthorisedAction =
+    new FakeClaimsAuthorisedAction(
+      cc,
+      CharityUser(UserType.Agent, Some(id))
+    )
+
+  def org(
+    cc: ControllerComponents,
+    id: String = "org-id"
+  )(implicit ec: ExecutionContext): FakeClaimsAuthorisedAction =
+    new FakeClaimsAuthorisedAction(
+      cc,
+      CharityUser(UserType.Organisation, Some(id))
+    )
+
+  def individual(
+    cc: ControllerComponents
+  )(implicit ec: ExecutionContext): FakeClaimsAuthorisedAction =
+    new FakeClaimsAuthorisedAction(
+      cc,
+      CharityUser(UserType.Individual, None)
+    )
 }

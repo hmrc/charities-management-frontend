@@ -16,9 +16,8 @@
 
 package util
 
-import controllers.actions.FakeClaimsAuthorisedAction
-import models.requests.UserType
-import models.requests.UserType.Organisation
+import controllers.actions.*
+import models.requests.{CharityUser, UserType}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.mvc.*
@@ -30,13 +29,20 @@ import scala.concurrent.ExecutionContext
 trait ControllerSpecBase extends PlaySpec with MockitoSugar with Results {
 
   protected val cc: MessagesControllerComponents = Helpers.stubMessagesControllerComponents()
-  implicit protected val ec: ExecutionContext    = cc.executionContext
 
-  protected def fakeAuth(
-    userType: UserType = Organisation,
-    userId: String = "test-user-123"
-  ): FakeClaimsAuthorisedAction =
-    new FakeClaimsAuthorisedAction(cc, userType, userId)
+  implicit protected val ec: ExecutionContext = cc.executionContext
+
+  protected def fakeAuthorised(user: CharityUser): FakeClaimsAuthorisedAction =
+    new FakeClaimsAuthorisedAction(cc, user)
+
+  protected def fakeAgent(id: String = "test-agent-id"): FakeClaimsAuthorisedAction =
+    fakeAuthorised(CharityUser(UserType.Agent, Some(id)))
+
+  protected def fakeOrg(id: String = "test-user-123"): FakeClaimsAuthorisedAction =
+    fakeAuthorised(CharityUser(UserType.Organisation, Some(id)))
+
+  protected def fakeIndividual: FakeClaimsAuthorisedAction =
+    fakeAuthorised(CharityUser(UserType.Individual, None))
 
   protected def html(content: String): Html =
     Html(content)

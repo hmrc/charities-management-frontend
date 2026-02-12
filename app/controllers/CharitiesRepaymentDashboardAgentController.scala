@@ -16,7 +16,8 @@
 
 package controllers
 
-import controllers.actions.ClaimsAuthorisedAction
+import com.google.inject.name.Named
+import controllers.actions.BaseAuthorisedAction
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -26,13 +27,11 @@ import javax.inject.Inject
 
 class CharitiesRepaymentDashboardAgentController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  authAction: ClaimsAuthorisedAction,
+  @Named("agentAuth") agentAuth: BaseAuthorisedAction,
   view: CharityRepaymentDashboardAgentView
 ) extends FrontendBaseController
     with I18nSupport {
-
-  def onPageLoad: Action[AnyContent] = authAction { implicit request =>
+  def onPageLoad: Action[AnyContent] = agentAuth { implicit request =>
     Ok(view())
   }
-
 }

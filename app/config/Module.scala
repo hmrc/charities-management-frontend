@@ -16,8 +16,10 @@
 
 package config
 
-import play.api.{Configuration, Environment}
+import com.google.inject.name.Names
+import controllers.actions.*
 import play.api.inject.{Binding, Module as AppModule}
+import play.api.{Configuration, Environment}
 
 import java.time.Clock
 
@@ -27,5 +29,15 @@ class Module extends AppModule:
     environment: Environment,
     configuration: Configuration
   ): Seq[Binding[_]] =
-    bind[Clock].toInstance(Clock.systemDefaultZone) :: // inject if current time needs to be controlled in unit tests
-      Nil
+    Seq(
+      bind[Clock].toInstance(Clock.systemDefaultZone),
+      bind[BaseAuthorisedAction]
+        .qualifiedWith(Names.named("orgAuth"))
+        .to[OrgClaimsAuthorisedAction],
+      bind[BaseAuthorisedAction]
+        .qualifiedWith(Names.named("agentAuth"))
+        .to[AgentClaimsAuthorisedAction],
+      bind[BaseAuthorisedAction]
+        .qualifiedWith(Names.named("identifyAuth"))
+        .to[IdentifyClaimsAuthAction]
+    )
