@@ -6,7 +6,7 @@ GET         /assets/*file                             controllers.Assets.version
 
 GET         /                                         controllers.HomeController.landingPage
 
-GET         /                                         controllers.StartController.start
+GET         /start                                    controllers.StartController.start
 
 GET         /keep-alive                               controllers.StartController.keepAlive
 
