@@ -19,6 +19,7 @@ package controllers
 import com.google.inject.name.Named
 import controllers.actions.BaseAuthorisedAction
 import models.requests.UserType.{Agent, Organisation}
+import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -30,7 +31,8 @@ class HomeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   @Named("identifyAuth") identifyUser: BaseAuthorisedAction
 ) extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   def landingPage: Action[AnyContent] = identifyUser.async { implicit request =>
     request.charityUser.userType match {
@@ -39,6 +41,7 @@ class HomeController @Inject() (
       case Agent =>
         Future.successful(Redirect(controllers.routes.CharitiesRepaymentDashboardAgentController.onPageLoad))
       case _ =>
+        logger.warn(s"Unrecognised user type, redirecting to access denied")
         Future.successful(Redirect(controllers.routes.AccessDeniedController.onPageLoad))
     }
   }

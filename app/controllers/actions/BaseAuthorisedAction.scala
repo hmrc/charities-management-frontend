@@ -18,6 +18,8 @@ package controllers.actions
 
 import config.AppConfig
 import models.requests.{AuthorisedRequest, CharityUser, UserType}
+
+import play.api.Logging
 import play.api.mvc.*
 import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.auth.core.*
@@ -30,7 +32,8 @@ import javax.inject.{Inject, Named, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 trait BaseAuthorisedAction
-    extends ActionBuilder[AuthorisedRequest, AnyContent]
+    extends Logging
+    with ActionBuilder[AuthorisedRequest, AnyContent]
     with ActionFunction[Request, AuthorisedRequest]
     with AuthorisedFunctions {
 
@@ -52,7 +55,8 @@ trait BaseAuthorisedAction
       .retrieve(Retrievals.affinityGroup and Retrievals.allEnrolments) { case affinityGroup ~ enrolments =>
         f(affinityGroup, enrolments)
       }
-      .recover { case _: AuthorisationException =>
+      .recover { case ex: AuthorisationException =>
+        logger.warn(s"Authorisation failed: ${ex.reason}, redirecting to login")
         Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
       }
   }
@@ -76,9 +80,13 @@ class AgentClaimsAuthorisedAction @Inject() (
         case Some(AffinityGroup.Agent) =>
           BaseAuthorisedAction
             .agentEnrolmentId(enrolments)
-            .fold(accessDenied)(agentId => block(AuthorisedRequest(request, CharityUser(UserType.Agent, Some(agentId)))))
+            .fold {
+              logger.warn(s"Agent has no HMRC-CHAR-AGENT enrolment, denying access")
+              accessDenied
+            }(agentId => block(AuthorisedRequest(request, CharityUser(UserType.Agent, Some(agentId)))))
 
         case _ =>
+          logger.warn(s"Non-agent affinity group (${affinityGroup.getOrElse("none")}) not permitted, denying access")
           accessDenied
     }
 }
@@ -101,9 +109,13 @@ class OrgClaimsAuthorisedAction @Inject() (
         case Some(AffinityGroup.Organisation) =>
           BaseAuthorisedAction
             .orgEnrolmentId(enrolments)
-            .fold(accessDenied)(orgId => block(AuthorisedRequest(request, CharityUser(UserType.Organisation, Some(orgId)))))
+            .fold {
+              logger.warn(s"Organisation has no HMRC-CHAR-ORG enrolment, denying access")
+              accessDenied
+            }(orgId => block(AuthorisedRequest(request, CharityUser(UserType.Organisation, Some(orgId)))))
 
         case _ =>
+          logger.warn(s"Non-organisation affinity group (${affinityGroup.getOrElse("none")}) not permitted, denying access")
           accessDenied
     }
 }
