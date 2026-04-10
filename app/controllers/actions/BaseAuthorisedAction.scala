@@ -55,9 +55,13 @@ trait BaseAuthorisedAction
       .retrieve(Retrievals.affinityGroup and Retrievals.allEnrolments) { case affinityGroup ~ enrolments =>
         f(affinityGroup, enrolments)
       }
-      .recover { case ex: AuthorisationException =>
-        logger.warn(s"Authorisation failed: ${ex.reason}, redirecting to login")
-        Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
+      .recover {
+        case ex: AuthorisationException =>
+          logger.warn(s"Authorisation failed: ${ex.reason}, redirecting to login")
+          Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
+        case ex =>
+          logger.warn(s"Unexpected error during authorisation, redirecting to login: ${ex.getMessage}")
+          Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
       }
   }
 }
