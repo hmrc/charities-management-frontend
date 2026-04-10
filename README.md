@@ -1,7 +1,7 @@
 
 # charities-management-frontend
 
-This is a placeholder README.md for a new repository
+Frontend service for managing charity repayment claims within HMRC digital services.
 
 ### License
 
