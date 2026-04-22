@@ -1,8 +1,8 @@
-service.name = Charities Management
+service.name = Make a charity tax repayment claim
 service.text = This is your new service
 
 #Charity Repayment Organisation Landing Page
-charityRepaymentDashboard.title = Charity repayment dashboard - Charities - GOV.UK
+charityRepaymentDashboard.title = Charity repayment dashboard - Make a charity tax repayment claim - GOV.UK
 charityRepaymentDashboard.heading = Charity repayment dashboard
 charityRepaymentDashboard.caption = HMRC Charities reference: {0}
 charityRepaymentDashboard.p = Before you make a claim, complete and save any schedule spreadsheets.
