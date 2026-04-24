@@ -20,9 +20,9 @@ import play.api.libs.json.Format
 import play.api.libs.json.Json
 
 final case class GetClaimsResponse(
-                                    claimsCount: Int, // number of claims returned
-                                    claimsList: List[ClaimInfo] // list of claims returned
-                                  )
+  claimsCount: Int,           // number of claims returned
+  claimsList: List[ClaimInfo] // list of claims returned
+)
 
 object GetClaimsResponse {
   given format: Format[GetClaimsResponse] = Json.format[GetClaimsResponse]

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,10 @@ package models
 import play.api.libs.json.Format
 import play.api.libs.json.Json
 
-final case class ClaimInfo(
-  claimId: String,
-  hmrcCharitiesReference: Option[String] = None,
-  nameOfCharity: Option[String] = None
+final case class GetAgentReferenceResponse(
+  agentName: String // name of the Agent
 )
 
-object ClaimInfo {
-  given format: Format[ClaimInfo] = Json.format[ClaimInfo]
+object GetAgentReferenceResponse {
+  given format: Format[GetAgentReferenceResponse] = Json.format[GetAgentReferenceResponse]
 }

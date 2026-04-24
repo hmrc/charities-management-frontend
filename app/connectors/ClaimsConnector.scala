@@ -39,6 +39,10 @@ trait ClaimsConnector {
   type UserId = String
 
   def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse]
+
+  def getOrganisationName(charityReference: Option[String])(using hc: HeaderCarrier): Future[GetOrganisationReferenceResponse]
+
+  def getAgentName(agentReference: String)(using hc: HeaderCarrier): Future[GetAgentReferenceResponse]
 }
 
 class ClaimsConnectorImpl @Inject() (
@@ -69,6 +73,20 @@ class ClaimsConnectorImpl @Inject() (
     callCharitiesClaimsBackend[Nothing, GetClaimsResponse](
       method = "GET",
       url = s"$claimsApiUrl?claimSubmitted=false",
+      payload = None
+    )
+
+  final def getOrganisationName(charitiesReference: Option[String])(using hc: HeaderCarrier): Future[GetOrganisationReferenceResponse] =
+    callCharitiesClaimsBackend[Nothing, GetOrganisationReferenceResponse](
+      method = "GET",
+      url = s"$rdsOrganisationNameApiUrl/$charitiesReference",
+      payload = None
+    )
+
+  final def getAgentName(agentReference: String)(using hc: HeaderCarrier): Future[GetAgentReferenceResponse] =
+    callCharitiesClaimsBackend[Nothing, GetAgentReferenceResponse](
+      method = "GET",
+      url = s"$rdsAgentNameApiUrl/$agentReference",
       payload = None
     )
 
