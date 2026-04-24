@@ -11,7 +11,7 @@ GET        /keep-alive                               controllers.StartController
 
 GET        /timed-out                                controllers.StartController.timedOut
 
-GET        /charity-repayment-dashboard              controllers.CharitiesRepaymentDashboardController.onPageLoad
+GET        /charity-repayment-dashboard       controllers.CharitiesRepaymentDashboardController.onPageLoad
 
 GET        /charity-repayment-dashboard-agent        controllers.CharitiesRepaymentDashboardAgentController.onPageLoad
 

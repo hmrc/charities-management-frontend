@@ -39,3 +39,7 @@ class AppConfig @Inject() (config: Configuration):
   lazy val homePageUrl: String = config.get[String]("urls.homePageUrl")
 
   lazy val accessibilityStatementUrl: String = config.get[String]("urls.accessibilityStatementUrl")
+
+  lazy val hmrcServicesHomeUrl: String = config.get[String]("urls.hmrcServicesHomeUrl")
+
+  lazy val giftAidOtherIncomeCommunityBuildingsUrl: String = config.get[String]("urls.giftAidOtherIncomeCommunityBuildingsUrl")

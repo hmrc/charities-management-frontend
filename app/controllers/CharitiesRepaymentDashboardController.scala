@@ -34,6 +34,17 @@ class CharitiesRepaymentDashboardController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
   def onPageLoad: Action[AnyContent] = orgAuth { implicit request =>
-    Ok(view(request.charityUser.referenceId, config.makeCharityRepaymentClaimUrl))
+    val orgName: Option[String] = Some("Name of Charity goes here")
+    val claimExist: Boolean     = false
+    Ok(
+      view(
+        request.charityUser.referenceId,
+        config.makeCharityRepaymentClaimUrl,
+        orgName,
+        config.giftAidOtherIncomeCommunityBuildingsUrl,
+        config.hmrcServicesHomeUrl,
+        claimExist
+      )
+    )
   }
 }

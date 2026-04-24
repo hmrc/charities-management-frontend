@@ -37,5 +37,4 @@ class StartController @Inject() (
 
   val timedOut: Action[AnyContent] =
     Action(implicit request => Redirect(routes.StartController.start.url))
-
 }
