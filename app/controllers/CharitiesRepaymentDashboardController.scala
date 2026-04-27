@@ -51,11 +51,11 @@ class CharitiesRepaymentDashboardController @Inject() (
           yield Ok(
             view(
               Some(referenceId),
-              config.makeCharityRepaymentClaimUrl
-              // orgName,
-              // config.giftAidOtherIncomeCommunityBuildingsUrl,
-              // config.hmrcServicesHomeUrl,
-              // getClaimsResponse.claimsCount == 1
+              config.makeCharityRepaymentClaimUrl,
+              orgName,
+              config.giftAidOtherIncomeCommunityBuildingsUrl,
+              config.hmrcServicesHomeUrl,
+              getClaimsResponse.claimsCount == 1
             )
           )
         case _ =>
