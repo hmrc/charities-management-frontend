@@ -24,13 +24,11 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.CharityRepaymentDashboardView
 import connectors.ClaimsConnector
-import models.GetClaimsResponse
 
 import scala.concurrent.Future
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-
 import javax.inject.Inject
+import uk.gov.hmrc.http.HeaderCarrier
+import scala.concurrent.ExecutionContext
 
 class CharitiesRepaymentDashboardController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -38,48 +36,29 @@ class CharitiesRepaymentDashboardController @Inject() (
   config: AppConfig,
   claimsConnector: ClaimsConnector,
   view: CharityRepaymentDashboardView
-) extends FrontendBaseController
+)(using ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
-  def onPageLoad: Action[AnyContent] = orgAuth { implicit request =>
-    // val orgName: Option[String] = Some("Name of Charity goes here")
-    // val claimExist: Boolean = false
+
+  def onPageLoad: Action[AnyContent] = orgAuth.async { implicit request =>
     for
-      orgName   <- getOrganisationName(request.charityUser.referenceId)
-      claimExist <- retrieveUnsubmittedClaims(request.charityUser.referenceId)
+      orgName           <- getOrganisationName(request.charityUser.referenceId)
+      getClaimsResponse <- claimsConnector.retrieveUnsubmittedClaims
     yield Ok(
       view(
         request.charityUser.referenceId,
-        config.makeCharityRepaymentClaimUrl,
-        orgName,
-        config.giftAidOtherIncomeCommunityBuildingsUrl,
-        config.hmrcServicesHomeUrl,
-        claimExist
+        config.makeCharityRepaymentClaimUrl
+        // orgName,
+        // config.giftAidOtherIncomeCommunityBuildingsUrl,
+        // config.hmrcServicesHomeUrl,
+        // getClaimsResponse.claimsCount > 0
       )
     )
   }
 
-  def getOrganisationName(currentUser: Option[String])(using HeaderCarrier): Future[Option[String]] =
+  private def getOrganisationName(currentUser: Option[String])(using HeaderCarrier): Future[Option[String]] =
     claimsConnector
       .getOrganisationName(currentUser)
-      .flatMap {
-        case Some(organisationName) => Future.successful(organisationName)
-        case _ =>
-          Future.failed(
-            new Exception(
-              s"No organisation name found for the given organisation reference $currentUser"
-            )
-          )
-      }
+      .map(_.organisationName)
 
-    def retrieveUnsubmittedClaims(using HeaderCarrier): Future[GetClaimsResponse] =
-      claimsConnector.retrieveUnsubmittedClaims
-        .flatMap {
-          case Some(claims) => Future.successful(claims)
-          case _ =>
-            Future.failed(
-              new Exception(
-                s"No claims found for the given organisation reference $currentUser"
-              )
-            )
-        }
 }
