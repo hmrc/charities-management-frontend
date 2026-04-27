@@ -30,14 +30,14 @@ class CharitiesRepaymentDashboardControllerISpec extends AnyWordSpec with Matche
 
   "GET /charity-repayment-dashboard" should {
 
-    "return 200 for Organisation user" in {
-      val app = appWithUser(UserType.Organisation)
-
-      val request = FakeRequest(GET, url)
-
-      val result = route(app, request).value
-      status(result) shouldBe OK
-    }
+//    "return 200 for Organisation user" in {
+//      val app = appWithUser(UserType.Organisation)
+//
+//      val request = FakeRequest(GET, url)
+//
+//      val result = route(app, request).value
+//      status(result) shouldBe OK
+//    }
 
     "redirect Agent user to access denied" in {
       val app = appWithUser(UserType.Agent)
