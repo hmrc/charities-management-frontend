@@ -29,10 +29,11 @@ import scala.concurrent.Future
 import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext
+import models.requests.UserType
 
 class CharitiesRepaymentDashboardController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  @Named("orgAuth") orgAuth: BaseAuthorisedAction,
+  @Named("orgAuth") authorisedAction: BaseAuthorisedAction,
   config: AppConfig,
   claimsConnector: ClaimsConnector,
   view: CharityRepaymentDashboardView
@@ -40,25 +41,31 @@ class CharitiesRepaymentDashboardController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = orgAuth.async { implicit request =>
-    for
-      orgName           <- getOrganisationName(request.charityUser.referenceId)
-      getClaimsResponse <- claimsConnector.retrieveUnsubmittedClaims
-    yield Ok(
-      view(
-        request.charityUser.referenceId,
-        config.makeCharityRepaymentClaimUrl,
-        orgName,
-        config.giftAidOtherIncomeCommunityBuildingsUrl,
-        config.hmrcServicesHomeUrl,
-        getClaimsResponse.claimsCount > 0
-      )
-    )
-  }
+  def onPageLoad: Action[AnyContent] = authorisedAction
+    .async { implicit request =>
+      request.charityUser.referenceId match {
+        case Some(referenceId) if request.charityUser.userType == UserType.Organisation =>
+          for
+            orgName           <- getOrganisationName(referenceId)
+            getClaimsResponse <- claimsConnector.retrieveUnsubmittedClaims
+          yield Ok(
+            view(
+              Some(referenceId),
+              config.makeCharityRepaymentClaimUrl
+              // orgName,
+              // config.giftAidOtherIncomeCommunityBuildingsUrl,
+              // config.hmrcServicesHomeUrl,
+              // getClaimsResponse.claimsCount == 1
+            )
+          )
+        case _ =>
+          Future.successful(Redirect(controllers.routes.AccessDeniedController.onPageLoad))
+      }
+    }
 
-  private def getOrganisationName(currentUser: Option[String])(using HeaderCarrier): Future[Option[String]] =
+  private def getOrganisationName(charityReference: String)(using HeaderCarrier): Future[Option[String]] =
     claimsConnector
-      .getOrganisationName(currentUser)
+      .getOrganisationName(charityReference)
       .map(_.organisationName)
 
 }
