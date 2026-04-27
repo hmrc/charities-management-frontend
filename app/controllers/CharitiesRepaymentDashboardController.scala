@@ -47,11 +47,11 @@ class CharitiesRepaymentDashboardController @Inject() (
     yield Ok(
       view(
         request.charityUser.referenceId,
-        config.makeCharityRepaymentClaimUrl
-        // orgName,
-        // config.giftAidOtherIncomeCommunityBuildingsUrl,
-        // config.hmrcServicesHomeUrl,
-        // getClaimsResponse.claimsCount > 0
+        config.makeCharityRepaymentClaimUrl,
+        orgName,
+        config.giftAidOtherIncomeCommunityBuildingsUrl,
+        config.hmrcServicesHomeUrl,
+        getClaimsResponse.claimsCount > 0
       )
     )
   }
