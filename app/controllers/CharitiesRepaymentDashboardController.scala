@@ -42,10 +42,10 @@ class CharitiesRepaymentDashboardController @Inject() (
     with I18nSupport {
   def onPageLoad: Action[AnyContent] = orgAuth { implicit request =>
     // val orgName: Option[String] = Some("Name of Charity goes here")
-    val claimExist: Boolean = false
+    // val claimExist: Boolean = false
     for
       orgName   <- getOrganisationName(request.charityUser.referenceId)
-      claimExist <- retrieveUnsubmittedClaims
+      claimExist <- retrieveUnsubmittedClaims(request.charityUser.referenceId)
     yield Ok(
       view(
         request.charityUser.referenceId,
@@ -63,7 +63,7 @@ class CharitiesRepaymentDashboardController @Inject() (
       .getOrganisationName(currentUser)
       .flatMap {
         case Some(organisationName) => Future.successful(organisationName)
-        case None =>
+        case _ =>
           Future.failed(
             new Exception(
               s"No organisation name found for the given organisation reference $currentUser"
@@ -74,11 +74,11 @@ class CharitiesRepaymentDashboardController @Inject() (
     def retrieveUnsubmittedClaims(using HeaderCarrier): Future[GetClaimsResponse] =
       claimsConnector.retrieveUnsubmittedClaims
         .flatMap {
-          case Some(claims) => Future.successful(true)
-          case None =>
+          case Some(claims) => Future.successful(claims)
+          case _ =>
             Future.failed(
               new Exception(
-                s"No organisation name found for the given organisation reference $currentUser"
+                s"No claims found for the given organisation reference $currentUser"
               )
             )
         }
