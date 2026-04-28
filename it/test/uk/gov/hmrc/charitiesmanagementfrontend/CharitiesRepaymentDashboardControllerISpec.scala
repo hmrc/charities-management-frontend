@@ -39,17 +39,17 @@ class CharitiesRepaymentDashboardControllerISpec extends AnyWordSpec with Matche
 //      status(result) shouldBe OK
 //    }
 
-    "redirect Agent user to access denied" in {
-      val app = appWithUser(UserType.Agent)
+    // "redirect Agent user to access denied" in {
+    //   val app = appWithUser(UserType.Agent)
 
-      val request = FakeRequest(GET, url)
+    //   val request = FakeRequest(GET, url)
 
-      val result = route(app, request).value
+    //   val result = route(app, request).value
 
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result).value shouldBe
-        controllers.routes.AccessDeniedController.onPageLoad.url
-    }
+    //   status(result) shouldBe SEE_OTHER
+    //   redirectLocation(result).value shouldBe
+    //     controllers.routes.AccessDeniedController.onPageLoad.url
+    // }
 
     "redirect Individual user to access denied" in {
       val app = appWithUser(UserType.Individual)

@@ -8,9 +8,23 @@ charityRepaymentDashboard.caption.name = {0}
 charityRepaymentDashboard.caption.ref = HMRC Charities reference: {0}
 charityRepaymentDashboard.para = Complete any <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Gift Aid, Other Income or Community Building (opens in new tab)</a> schedule spreadsheets before making a new claim.
 charityRepaymentDashboard.subheading = Make a repayment claim
-charityRepaymentDashboard.link.1a = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Use this to make a repayment claim</a>
+charityRepaymentDashboard.link.1a = <a class="govuk-link" href="{0}" rel="noreferrer noopener">Use this to make a repayment claim</a>
 charityRepaymentDashboard.link.1b = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Continue with draft claim</a>
 charityRepaymentDashboard.link.2 = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Use HMRC-recognised software (opens in new tab)</a>
+
+#Charity Repayment Agent Landing Page
+charityRepaymentDashboardAgent.title = Manage Charity repayment dashboard - Make a charity tax repayment claim - GOV.UK
+charityRepaymentDashboardAgent.heading = Manage Charity repayment claims
+charityRepaymentDashboardAgent.caption.name = {0}
+charityRepaymentDashboardAgent.caption.ref = Charities Agent reference: {0}
+charityRepaymentDashboardAgent.p1 = Complete any <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Gift Aid, Other Income or Community Building (opens in new tab)</a> schedule spreadsheets before making a new claim.
+charityRepaymentDashboardAgent.subheading1 = Make a repayment claim
+charityRepaymentDashboardAgent.subheading2 = Draft charity repayment claims
+charityRepaymentDashboardAgent.p2.0 = You have {0} claims in draft.
+charityRepaymentDashboardAgent.p2.1 = Showing {0}-{1} of {2} records.
+charityRepaymentDashboardAgent.link.1a = <a class="govuk-link" href="{0}" rel="noreferrer noopener">Use this to make a repayment claim</a>
+charityRepaymentDashboardAgent.link.1b = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Continue with draft claim</a>
+charityRepaymentDashboardAgent.link.2 = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Use HMRC-recognised software (opens in new tab)</a>
 
 #Error Page
 error.title = Sorry, there is a problem with the service - Charities - GOV.UK
@@ -19,11 +33,20 @@ error.p = You do not have access to this service.
 error.signInLink = Continue to your account
 
 #Charity Repayment Agent Landing Page
-charityRepaymentDashboardAgent.title = Charity repayment dashboard for agents
-charityRepaymentDashboardAgent.heading = Charity repayment dashboard for agents
+charityRepaymentDashboardAgent.title = Manage charity repayment claims
+charityRepaymentDashboardAgent.heading = Manage charity repayment claims
 
 #Timeout dialog
 session-expired.keep-alive-button-text=Continue
 session-expired.sign-out-button-text=Sign-out
 session-expired-message=For your security, we will time you out in
+
+back.text = Your HMRC Services
+
+site.govuk = GOV.UK
+site.pagination.landmark = Pagination
+site.pagination.next = Next
+site.pagination.of = of
+site.pagination.page = page
+site.pagination.previous = Previous
 

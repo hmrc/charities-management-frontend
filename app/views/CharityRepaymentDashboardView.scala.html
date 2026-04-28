@@ -21,15 +21,15 @@
     layout: templates.Layout
 )
 
-@(uReference: Option[String], makeRepaymentClaimUrl: String,orgName: Option[String],
+@(hmrcCharityReference: String, makeRepaymentClaimUrl: String, orgName: Option[String],
 giftAidOtherIncomeCommunityBuildingsUrl: String, hmrcServicesHomeUrl:String,claimExist: Boolean)(implicit request:Request[?], messages: Messages)
 
 @layout(pageTitle = Some(messages("charityRepaymentDashboard.title"))) {
 
-    <span class="govuk-caption-l">@messages("charityRepaymentDashboard.caption.name", orgName)</span>
-    @uReference.map { ref =>
-        <span class="govuk-caption-l">@messages("charityRepaymentDashboard.caption.ref", ref)</span>
-    }
+    <span class="govuk-caption-l">@messages("charityRepaymentDashboard.caption.name", orgName.getOrElse(""))</span>
+    
+    <span class="govuk-caption-l">@messages("charityRepaymentDashboard.caption.ref", hmrcCharityReference)</span>
+
     <h1 class="govuk-heading-xl">@messages("charityRepaymentDashboard.heading")</h1>
 
     <p class="govuk-body">@Html(messages("charityRepaymentDashboard.para", giftAidOtherIncomeCommunityBuildingsUrl))</p>

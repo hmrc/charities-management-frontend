@@ -15,16 +15,52 @@
  *@
 
 @import play.twirl.api.Html
+@import models.ClaimInfo
+@import viewmodels.govuk.PaginationFluency.PaginationViewModel
+@import services.PaginationStatus
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukPagination
+@import views.ViewUtils
 
 @this(
-layout: templates.Layout
+   layout: templates.Layout,
+   govukPagination: GovukPagination
 )
 
-@()(implicit request:Request[?], messages: Messages)
+@(
+   hmrcCharityReference: String, 
+   makeRepaymentClaimUrl: String, 
+   agentName: String,
+   giftAidOtherIncomeCommunityBuildingsUrl: String,
+   hmrcServicesHomeUrl:String,
+   paginationViewModel: PaginationViewModel,
+   paginationStatus: PaginationStatus
+)(implicit request:Request[?], messages: Messages)
 
-@layout(pageTitle = Some(messages("charityRepaymentDashboardAgent.title"))) {
+@layout(pageTitle = Some(ViewUtils.titleWithPagination(messages("charityRepaymentDashboardAgent.title"), paginationStatus)))   {
+
+   <span class="govuk-caption-l">@messages("charityRepaymentDashboardAgent.caption.name", agentName)</span>
+   
+   <span class="govuk-caption-l">@messages("charityRepaymentDashboardAgent.caption.ref", hmrcCharityReference)</span>
 
    <h1 class="govuk-heading-xl">@messages("charityRepaymentDashboardAgent.heading")</h1>
+
+   <p class="govuk-body">@Html(messages("charityRepaymentDashboardAgent.p1", giftAidOtherIncomeCommunityBuildingsUrl))</p>
+
+   <h3 class = "govuk-heading-m">@messages("charityRepaymentDashboardAgent.subheading1")</h3>
+
+   <p class="govuk-body">@Html(messages("charityRepaymentDashboard.link.1a", makeRepaymentClaimUrl))</p>
+
+   <p class="govuk-body">@Html(messages("charityRepaymentDashboardAgent.link.2", hmrcServicesHomeUrl))</p>
+
+   <h3 class = "govuk-heading-m">@messages("charityRepaymentDashboardAgent.subheading2")</h3>
+
+   @if(paginationStatus.totalRecords == 0) {
+      <p class="govuk-body">@Html(messages("charityRepaymentDashboardAgent.p2.0",paginationStatus.totalRecords))</p>
+   } else {
+      <p class="govuk-body">@Html(messages("charityRepaymentDashboardAgent.p2.1", (paginationStatus.currentPage-1)*10+1, Math.min(paginationStatus.currentPage*10, paginationStatus.totalRecords), paginationStatus.totalRecords))</p>
+   }
+
+   @govukPagination(paginationViewModel.asPagination)
 
 }
 
