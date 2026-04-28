@@ -28,8 +28,11 @@ import uk.gov.hmrc.auth.core.retrieve.~
 import util.BaseSpec
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext
 
 class AgentClaimsAuthorisedActionSpec extends BaseSpec {
+
+  given ExecutionContext = ExecutionContext.global
 
   class Harness(action: AgentClaimsAuthorisedAction) {
     def onPageLoad: Action[AnyContent] =
@@ -46,7 +49,7 @@ class AgentClaimsAuthorisedActionSpec extends BaseSpec {
   when(mockConfig.loginUrl).thenReturn("/login")
   when(mockConfig.loginContinueUrl).thenReturn("/continue")
 
-  "AgentClaimsAuthorisedAction" should {
+  "AgentClaimsAuthorisedAction" - {
 
     "allow Agent with valid enrolment" in {
       val mockAuthConnector = mock[AuthConnector]
@@ -62,8 +65,8 @@ class AgentClaimsAuthorisedActionSpec extends BaseSpec {
 
       val result = controller.onPageLoad(FakeRequest())
 
-      status(result) mustBe OK
-      contentAsString(result) mustBe "UserType: Agent, UserReferenceId: A123"
+      status(result) shouldBe OK
+      contentAsString(result) shouldBe "UserType: Agent, UserReferenceId: A123"
     }
 
     "deny Agent without enrolment" in {
@@ -78,8 +81,8 @@ class AgentClaimsAuthorisedActionSpec extends BaseSpec {
 
       val result = controller.onPageLoad(FakeRequest())
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(
         controllers.routes.AccessDeniedController.onPageLoad.url
       )
     }
@@ -98,8 +101,8 @@ class AgentClaimsAuthorisedActionSpec extends BaseSpec {
 
       val result = controller.onPageLoad(FakeRequest())
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(
         controllers.routes.AccessDeniedController.onPageLoad.url
       )
     }

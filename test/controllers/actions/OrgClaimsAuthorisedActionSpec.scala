@@ -29,8 +29,11 @@ import uk.gov.hmrc.auth.core.retrieve.~
 import util.BaseSpec
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext
 
 class OrgClaimsAuthorisedActionSpec extends BaseSpec {
+
+  given ExecutionContext = ExecutionContext.global
 
   class Harness(action: OrgClaimsAuthorisedAction) {
     def onPageLoad: Action[AnyContent] =
@@ -47,7 +50,7 @@ class OrgClaimsAuthorisedActionSpec extends BaseSpec {
   when(mockConfig.loginUrl).thenReturn("/login")
   when(mockConfig.loginContinueUrl).thenReturn("/continue")
 
-  "OrgClaimsAuthorisedAction" should {
+  "OrgClaimsAuthorisedAction" - {
 
     "allow Organisation with valid enrolment" in {
       val mockAuthConnector = mock[AuthConnector]
@@ -63,8 +66,8 @@ class OrgClaimsAuthorisedActionSpec extends BaseSpec {
 
       val result = controller.onPageLoad(FakeRequest())
 
-      status(result) mustBe OK
-      contentAsString(result) mustBe "UserType: Organisation, UserReferenceId: O123"
+      status(result) shouldBe OK
+      contentAsString(result) shouldBe "UserType: Organisation, UserReferenceId: O123"
     }
 
     "deny Organisation without enrolment" in {
@@ -79,8 +82,8 @@ class OrgClaimsAuthorisedActionSpec extends BaseSpec {
 
       val result = controller.onPageLoad(FakeRequest())
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(
         controllers.routes.AccessDeniedController.onPageLoad.url
       )
     }
@@ -99,8 +102,8 @@ class OrgClaimsAuthorisedActionSpec extends BaseSpec {
 
       val result = controller.onPageLoad(FakeRequest())
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(
         controllers.routes.AccessDeniedController.onPageLoad.url
       )
     }
@@ -117,8 +120,8 @@ class OrgClaimsAuthorisedActionSpec extends BaseSpec {
 
       val result = controller.onPageLoad(FakeRequest())
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(
         "/login?continue=%2Fcontinue"
       )
     }

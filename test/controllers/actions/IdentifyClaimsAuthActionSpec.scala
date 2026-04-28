@@ -28,8 +28,11 @@ import uk.gov.hmrc.auth.core.retrieve.~
 import util.BaseSpec
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext
 
 class IdentifyClaimsAuthActionSpec extends BaseSpec {
+
+  given ExecutionContext = ExecutionContext.global
 
   class Harness(action: IdentifyClaimsAuthAction) {
     def onPageLoad: Action[AnyContent] =
@@ -46,7 +49,7 @@ class IdentifyClaimsAuthActionSpec extends BaseSpec {
   when(mockConfig.loginUrl).thenReturn("/login")
   when(mockConfig.loginContinueUrl).thenReturn("/continue")
 
-  "IdentifyClaimsUserAction" should {
+  "IdentifyClaimsUserAction" - {
 
     "identify Agent user" in {
       val mockAuthConnector = mock[AuthConnector]
@@ -62,8 +65,8 @@ class IdentifyClaimsAuthActionSpec extends BaseSpec {
 
       val result = controller.onPageLoad(FakeRequest())
 
-      status(result) mustBe OK
-      contentAsString(result) mustBe "UserType: Agent, UserReferenceId: A123"
+      status(result) shouldBe OK
+      contentAsString(result) shouldBe "UserType: Agent, UserReferenceId: A123"
     }
 
     "identify Organisation user" in {
@@ -80,8 +83,8 @@ class IdentifyClaimsAuthActionSpec extends BaseSpec {
 
       val result = controller.onPageLoad(FakeRequest())
 
-      status(result) mustBe OK
-      contentAsString(result) mustBe "UserType: Organisation, UserReferenceId: O123"
+      status(result) shouldBe OK
+      contentAsString(result) shouldBe "UserType: Organisation, UserReferenceId: O123"
     }
 
     "identify Individual user" in {
@@ -96,8 +99,8 @@ class IdentifyClaimsAuthActionSpec extends BaseSpec {
 
       val result = controller.onPageLoad(FakeRequest())
 
-      status(result) mustBe OK
-      contentAsString(result) mustBe "UserType: Individual, UserReferenceId: "
+      status(result) shouldBe OK
+      contentAsString(result) shouldBe "UserType: Individual, UserReferenceId: "
     }
   }
 }

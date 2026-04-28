@@ -17,35 +17,37 @@
 package connectors
 
 import com.typesafe.config.ConfigFactory
-import models.*
-import org.scalamock.handlers.CallHandler
 import play.api.Configuration
 import play.api.libs.json.Json
 import play.api.test.Helpers.*
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import util.{BaseSpec, HttpV2Support, TestClaims}
+import util.{BaseSpec, HttpV2Support}
 
+import java.net.URL
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
+import models.GetAgentReferenceResponse
+import scala.language.implicitConversions
+import models.GetClaimsResponse
+import models.GetOrganisationReferenceResponse
 
 class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 
   val config: Configuration = Configuration(
     ConfigFactory.parseString(
       """
-        |  microservice {
-        |    services {
-        |      charities-claims {
-        |        protocol = http
-        |        host     = foo.bar.com
-        |        port     = 1234
-        |        retryIntervals = [10ms,50ms]
-        |        context-path = "/foo-claims"
-        |      }
+        | microservice {
+        |   services {
+        |     charities-claims {
+        |       protocol = http
+        |       host     = foo.bar.com
+        |       port     = 1234
+        |       retryIntervals = [10ms,50ms]
+        |       context-path = "/charities-claims"
+        |     }
         |   }
-        |}
+        | }
         |""".stripMargin
     )
   )
@@ -53,86 +55,169 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
   val connector =
     new ClaimsConnectorImpl(
       http = mockHttp,
-      servicesConfig = new ServicesConfig(config),
       configuration = config,
+      servicesConfig = new ServicesConfig(config),
       actorSystem = actorSystem
-    )
-
-  def givenGetClaimEndpointReturns(
-    response: HttpResponse
-  ): CallHandler[Future[HttpResponse]] =
-    givenGetReturns(
-      expectedUrl = "http://foo.bar.com:1234/foo-claims/claims/123",
-      response = response
     )
 
   given HeaderCarrier = HeaderCarrier()
 
+  private val baseClaimsUrl =
+    "http://foo.bar.com:1234/charities-claims/claims?claimSubmitted=false"
+
+  private val orgUrl =
+    "http://foo.bar.com:1234/charities-claims/charities/organisations/123456"
+
+  private val agentUrl =
+    "http://foo.bar.com:1234/charities-claims/charities/agents/AGENT123"
+
   "ClaimsConnector" - {
+
+    "retry configuration" - {
+      "should load retry intervals from config" in {
+        connector.retryIntervals shouldBe Seq(
+          FiniteDuration(10, "ms"),
+          FiniteDuration(50, "ms")
+        )
+      }
+    }
+
     "retrieveUnsubmittedClaims" - {
-      "have retries defined" in {
-        connector.retryIntervals shouldBe Seq(FiniteDuration(10, "ms"), FiniteDuration(50, "ms"))
+
+      "should return claims when 200" in {
+        val json =
+          """
+            |{
+            |  "claimsCount": 0,
+            |  "claimsList": []
+            |}
+            |""".stripMargin
+        val expected = Json.parse(json).as[GetClaimsResponse]
+
+        givenGetReturns(baseClaimsUrl, HttpResponse(200, json))
+
+        await(connector.retrieveUnsubmittedClaims) shouldEqual expected
       }
 
-      "should return a list of unsubmitted claims" in {
-        givenGetClaimsEndpointReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()
-
-        await(connector.retrieveUnsubmittedClaims) shouldEqual TestClaims.testGetClaimsResponseUnsubmitted
-      }
-
-      "throw an exception if the service returns malformed JSON" in {
-        givenGetClaimsEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]"))
-          .once()
-        a[Exception] should be thrownBy {
-          await(connector.retrieveUnsubmittedClaims)
-        }
-      }
-
-      "throw an exception if the service returns wrong entity format" in {
-        givenGetClaimsEndpointReturns(HttpResponse(200, "{\"claimsCount\": 1, \"claimsList\": [{\"claimId\": 123}]}"))
-          .once()
-        a[Exception] should be thrownBy {
-          await(connector.retrieveUnsubmittedClaims)
-        }
-      }
-
-      "throw an exception if the service returns 404 status" in {
-        givenGetClaimsEndpointReturns(HttpResponse(404, "Bad Request")).once()
-        a[Exception] should be thrownBy {
-          await(connector.retrieveUnsubmittedClaims)
-        }
-      }
-
-      "throw an exception if the service returns 500 status" in {
-        givenGetClaimsEndpointReturns(HttpResponse(500, "")).once()
-        a[Exception] should be thrownBy {
-          await(connector.retrieveUnsubmittedClaims)
-        }
-      }
-
-      "throw exception when 5xx response status in the third attempt" in {
-        givenGetClaimsEndpointReturns(HttpResponse(500, "")).once()
-        givenGetClaimsEndpointReturns(HttpResponse(499, "")).once()
-        givenGetClaimsEndpointReturns(HttpResponse(469, "")).once()
+      "should throw exception when 500" in {
+        givenGetReturns(baseClaimsUrl, HttpResponse(500, ""))
 
         a[Exception] shouldBe thrownBy {
           await(connector.retrieveUnsubmittedClaims)
         }
       }
 
-      "accept valid response in a second attempt" in {
-        givenGetClaimsEndpointReturns(HttpResponse(500, "")).once()
-        givenGetClaimsEndpointReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()
-        await(connector.retrieveUnsubmittedClaims) shouldEqual TestClaims.testGetClaimsResponseUnsubmitted
+      "should retry and succeed on second attempt" in {
+        val json =
+          """
+            |{
+            |  "claimsCount": 0,
+            |  "claimsList": []
+            |}
+            |""".stripMargin
+        val expected = Json.parse(json).as[GetClaimsResponse]
+
+        givenGetReturns(baseClaimsUrl, HttpResponse(500, ""))
+        givenGetReturns(baseClaimsUrl, HttpResponse(200, json))
+
+        await(connector.retrieveUnsubmittedClaims) shouldEqual expected
       }
 
-      "accept valid response in a third attempt" in {
-        givenGetClaimsEndpointReturns(HttpResponse(499, "")).once()
-        givenGetClaimsEndpointReturns(HttpResponse(500, "")).once()
-        givenGetClaimsEndpointReturns(HttpResponse(200, TestClaims.testGetClaimsResponseUnsubmittedJsonString)).once()
-        await(connector.retrieveUnsubmittedClaims) shouldEqual TestClaims.testGetClaimsResponseUnsubmitted
+      "should retry and succeed on third attempt" in {
+        val json =
+          """
+            |{
+            |  "claimsCount": 0,
+            |  "claimsList": []
+            |}
+            |""".stripMargin
+        val expected = Json.parse(json).as[GetClaimsResponse]
+
+        givenGetReturns(baseClaimsUrl, HttpResponse(500, ""))
+        givenGetReturns(baseClaimsUrl, HttpResponse(499, ""))
+        givenGetReturns(baseClaimsUrl, HttpResponse(200, json))
+
+        await(connector.retrieveUnsubmittedClaims) shouldEqual expected
+      }
+
+      "should fail after retries exhausted" in {
+        givenGetReturns(baseClaimsUrl, HttpResponse(500, ""))
+        givenGetReturns(baseClaimsUrl, HttpResponse(500, ""))
+        givenGetReturns(baseClaimsUrl, HttpResponse(500, ""))
+
+        a[Exception] shouldBe thrownBy {
+          await(connector.retrieveUnsubmittedClaims)
+        }
+      }
+
+      "should throw exception when JSON is invalid" in {
+        givenGetReturns(baseClaimsUrl, HttpResponse(200, """{ invalid json }"""))
+
+        a[Exception] shouldBe thrownBy {
+          await(connector.retrieveUnsubmittedClaims)
+        }
+      }
+    }
+
+    "getOrganisationName" - {
+
+      "should return organisation name when 200" in {
+        val json     = """{ "organisationName": "Test Org" }"""
+        val expected = Json.parse(json).as[GetOrganisationReferenceResponse]
+
+        givenGetReturns(orgUrl, HttpResponse(200, json))
+
+        await(connector.getOrganisationName("123456")) shouldEqual expected
+      }
+
+      "should throw exception when 404" in {
+        givenGetReturns(orgUrl, HttpResponse(404, ""))
+
+        a[Exception] shouldBe thrownBy {
+          await(connector.getOrganisationName("123456"))
+        }
+      }
+
+      "should throw exception when 400 with valid error body" in {
+        val errorJson = """{ "errorCode": "BAD_REQUEST" }"""
+
+        givenGetReturns(orgUrl, HttpResponse(400, errorJson))
+
+        a[Exception] shouldBe thrownBy {
+          await(connector.getOrganisationName("123456"))
+        }
+      }
+    }
+
+    "getAgentName" - {
+
+      "should return agent name when 200" in {
+        val json     = """{ "agentName": "Agent Smith" }"""
+        val expected = Json.parse(json).as[GetAgentReferenceResponse]
+
+        givenGetReturns(agentUrl, HttpResponse(200, json))
+
+        await(connector.getAgentName("AGENT123")) shouldBe expected
+      }
+
+      "should throw exception when 500" in {
+        givenGetReturns(agentUrl, HttpResponse(500, ""))
+
+        a[Exception] shouldBe thrownBy {
+          await(connector.getAgentName("AGENT123"))
+        }
+      }
+
+      "should retry and succeed on third attempt" in {
+        val json     = """{ "agentName": "Agent Smith" }"""
+        val expected = Json.parse(json).as[GetAgentReferenceResponse]
+
+        givenGetReturns(agentUrl, HttpResponse(500, ""))
+        givenGetReturns(agentUrl, HttpResponse(499, ""))
+        givenGetReturns(agentUrl, HttpResponse(200, json))
+
+        await(connector.getAgentName("AGENT123")) shouldBe expected
       }
     }
   }
-
 }

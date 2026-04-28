@@ -48,7 +48,7 @@ class CharitiesRepaymentDashboardViewSpec extends ViewSpec {
     }
 
     "render the caption when uReference is provided" in {
-      val ref = ref
+      // val ref = ref
       val doc =
         asDocument(view(ref, makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
 
