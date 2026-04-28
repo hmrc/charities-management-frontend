@@ -19,17 +19,36 @@ package views
 import org.scalatestplus.play.*
 import util.ViewSpec
 import views.html.CharityRepaymentDashboardAgentView
+import models.ClaimInfo
+import services.PaginationService
 
 class CharitiesRepaymentDashboardAgentViewSpec extends ViewSpec {
 
-  private val view = injectView[CharityRepaymentDashboardAgentView]
+  private val view                                    = injectView[CharityRepaymentDashboardAgentView]
+  private val makeRepaymentClaimUrl                   = "/make-repayment-claim"
+  private val giftAidOtherIncomeCommunityBuildingsUrl = "/make-gift-aid-other-income-communit-buildings"
+  private val hmrcServicesHomeUrl                     = "/hrmc-service-home"
+  private val agentName                               = "Agent Name"
+  private val claims = List(ClaimInfo(claimId = "123", hmrcCharitiesReference = Some("ABC123"), nameOfCharity = Some("Charity Name")))
 
   "CharityRepaymentDashboardAgentView" should {
 
     "render title and heading correctly" in {
-      val doc = asDocument(view())
 
-      assertTitle(doc, messages("charityRepaymentDashboardAgent.title"))
+      val paginationResult = PaginationService.paginateClaims(claims, 1, "/foo")
+      val doc = asDocument(
+        view(
+          "ABC123",
+          makeRepaymentClaimUrl,
+          agentName,
+          giftAidOtherIncomeCommunityBuildingsUrl,
+          hmrcServicesHomeUrl,
+          paginationResult.paginationViewModel,
+          paginationResult
+        )
+      )
+
+      assertTitle(doc, ViewUtils.titleWithPagination("charityRepaymentDashboardAgent.title", paginationResult))
       assertH1(doc, messages("charityRepaymentDashboardAgent.heading"))
     }
   }

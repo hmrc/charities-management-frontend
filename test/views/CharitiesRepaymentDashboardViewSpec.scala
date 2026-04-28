@@ -24,7 +24,7 @@ class CharitiesRepaymentDashboardViewSpec extends ViewSpec {
 
   private val view                                    = injectView[CharityRepaymentDashboardView]
   private val makeRepaymentClaimUrl                   = "/make-repayment-claim"
-  private val giftAidOtherIncomeCommunityBuildingsUrl = "/make-gift-aid-other-income-community=buildings"
+  private val giftAidOtherIncomeCommunityBuildingsUrl = "/make-gift-aid-other-income-community-buildings"
   private val hmrcServicesHomeUrl                     = "/hrmc-service-home"
   private val claimExistTrue: Boolean                 = true
   private val claimExistFalse: Boolean                = false
@@ -33,7 +33,8 @@ class CharitiesRepaymentDashboardViewSpec extends ViewSpec {
   "CharityRepaymentDashboardView" should {
 
     "render title and heading correctly without reference" in {
-      val doc = asDocument(view(None, makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
+      val doc =
+        asDocument(view("ABC123", makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
 
       assertTitle(doc, messages("charityRepaymentDashboard.title"))
       assertH1(doc, messages("charityRepaymentDashboard.heading"))

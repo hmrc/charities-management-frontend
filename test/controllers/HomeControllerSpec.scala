@@ -43,7 +43,7 @@ class HomeControllerSpec extends ControllerSpecBase {
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
-        controllers.routes.CharitiesRepaymentDashboardAgentController.onPageLoad.url
+        controllers.routes.CharitiesRepaymentDashboardController.onPageLoad.url
     }
 
     "redirect Individual users to access denied" in {
