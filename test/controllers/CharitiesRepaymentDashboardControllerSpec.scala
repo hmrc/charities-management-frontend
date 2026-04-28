@@ -15,12 +15,18 @@
  */
 
 package controllers
-import config.AppConfig
-import connectors.ClaimsConnector
 import play.api.test.FakeRequest
-import uk.gov.hmrc.http.HeaderCarrier
 import util.ControllerSpecBase
+import config.AppConfig
 import views.html.{CharityRepaymentDashboardAgentView, CharityRepaymentDashboardView}
+import models.{GetClaimsResponse, GetOrganisationReferenceResponse}
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import play.api.test.Helpers.*
+import org.mockito.Mockito.*
+import play.twirl.api.Html
+import connectors.ClaimsConnector
+
+import scala.concurrent.Future
 
 class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
 
@@ -29,31 +35,25 @@ class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
     "return 200 OK and render the CharityRepaymentDashboardView view" in {
       val mockConfig: AppConfig                = mock[AppConfig]
       val mockClaimsConnector: ClaimsConnector = mock[ClaimsConnector]
-      val mockRDSConnector: ClaimsConnector    = mock[ClaimsConnector]
       val orgId                                = "test-user-123"
       val mockOrgView                          = mock[CharityRepaymentDashboardView]
-      val mockAgentView                        = mock[CharityRepaymentDashboardAgentView]
 
-      (mockClaimsConnector
-        .retrieveUnsubmittedClaims(using _: HeaderCarrier))
-        .expects()
-        .returning(Future.successful(GetClaimsResponse))
+      when(mockClaimsConnector.retrieveUnsubmittedClaims(using any()))
+        .thenReturn(Future.successful(GetClaimsResponse(claimsList = List.empty, claimsCount = 0)))
 
-      (mockRDSConnector
-        .getOrganisationName(orgId: String)(using _: HeaderCarrier))
-        .expects(orgId, *)
-        .returning(Future.successful(GetClaimsResponse))
+      when(mockClaimsConnector.getOrganisationName(any())(using any()))
+        .thenReturn(Future.successful(GetOrganisationReferenceResponse(Some("Test Org"))))
 
-      when(mockOrgView.apply(eqTo(Some(orgId)), any(), any(), any(), any(), any())(any(), any()))
+      when(mockOrgView.apply(eqTo(orgId), any(), any(), any(), any(), any())(any(), any()))
         .thenReturn(Html("<p>Success View</p>"))
 
-      val controller = new CharitiesRepaymentDashboardController(cc, fakeOrg(orgId), mockConfig, mockClaimsConnector, mockOrgView, mockAgentView)
+      val controller = new CharitiesRepaymentDashboardController(cc, fakeOrg(orgId), mockConfig, mockClaimsConnector, mockOrgView, null)
 
       val result = controller.onPageLoad(FakeRequest())
 
       status(result) mustBe OK
       contentAsString(result) must include("Success View")
-      verify(mockAgentView).apply(eqTo(Some(orgId)), any(), any(), any(), any(), any())(any(), any())
+      verify(mockOrgView).apply(eqTo(orgId), any(), any(), any(), any(), any())(any(), any())
     }
   }
 }
