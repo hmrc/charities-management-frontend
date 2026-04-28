@@ -24,7 +24,6 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import util.{BaseSpec, HttpV2Support}
 
-import java.net.URL
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.FiniteDuration
 import models.GetAgentReferenceResponse

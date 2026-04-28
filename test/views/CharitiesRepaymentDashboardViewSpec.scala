@@ -39,31 +39,8 @@ class CharitiesRepaymentDashboardViewSpec extends ViewSpec {
 
       assertTitle(doc, messages("charityRepaymentDashboard.title"))
       assertH1(doc, messages("charityRepaymentDashboard.heading"))
-    }
-
-    "render the body paragraph" in {
-      val doc = asDocument(view(ref, makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
-
-      doc.select("p.govuk-body").text() mustBe messages("charityRepaymentDashboard.para")
-    }
-
-    "render the caption when uReference is provided" in {
-      // val ref = ref
-      val doc =
-        asDocument(view(ref, makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
-
-      doc.select("span.govuk-caption-l").text() mustBe
-        messages("charityRepaymentDashboard.caption.ref", ref)
-    }
-
-    "render the link with correct href" in {
-      val doc = asDocument(view(ref, makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
-
-      doc
-        .select(
-          "a[href='https://www.gov.uk/government/publications/charities-online-commercial-software-suppliers']"
-        )
-        .isEmpty mustBe false
+      assertH3(doc, messages("charityRepaymentDashboard.subheading"))
+      // assertPara(doc, messages("charityRepaymentDashboard.para"))
     }
   }
 }

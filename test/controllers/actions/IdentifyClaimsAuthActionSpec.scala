@@ -19,7 +19,6 @@ package controllers.actions
 import config.AppConfig
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
-import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.mvc.*
 import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}

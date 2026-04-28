@@ -17,7 +17,6 @@
 package connectors
 
 import util.BaseSpec
-import connectors.Retries
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
