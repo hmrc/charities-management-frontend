@@ -48,7 +48,7 @@ class HomeControllerISpec extends AnyWordSpec with IntegrationTestSupport with M
       val result = route(app, request).value
       status(result) shouldBe SEE_OTHER
       redirectLocation(result).value shouldBe
-        controllers.routes.CharitiesRepaymentDashboardAgentController.onPageLoad.url
+        controllers.routes.CharitiesRepaymentDashboardController.onPageLoad.url
     }
   }
 

@@ -36,10 +36,9 @@ class HomeController @Inject() (
 
   def landingPage: Action[AnyContent] = identifyUser.async { implicit request =>
     request.charityUser.userType match {
-      case Organisation =>
+      case Organisation | Agent =>
         Future.successful(Redirect(controllers.routes.CharitiesRepaymentDashboardController.onPageLoad))
-      case Agent =>
-        Future.successful(Redirect(controllers.routes.CharitiesRepaymentDashboardAgentController.onPageLoad))
+
       case _ =>
         logger.warn(s"Unrecognised user type, redirecting to access denied")
         Future.successful(Redirect(controllers.routes.AccessDeniedController.onPageLoad))

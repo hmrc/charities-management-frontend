@@ -16,27 +16,28 @@
 
 package controllers
 
-import com.google.inject.name.Named
-import config.AppConfig
-import controllers.actions.BaseAuthorisedAction
-import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.CharityRepaymentDashboardView
 import connectors.ClaimsConnector
-
-import scala.concurrent.Future
-import javax.inject.Inject
-import uk.gov.hmrc.http.HeaderCarrier
-import scala.concurrent.ExecutionContext
+import config.AppConfig
+import views.html.{CharityRepaymentDashboardAgentView, CharityRepaymentDashboardView}
+import controllers.actions.BaseAuthorisedAction
+import com.google.inject.name.Named
 import models.requests.UserType
+import play.api.i18n.I18nSupport
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+
+import scala.concurrent.{ExecutionContext, Future}
+
+import javax.inject.Inject
+import services.PaginationService
 
 class CharitiesRepaymentDashboardController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  @Named("orgAuth") authorisedAction: BaseAuthorisedAction,
+  @Named("identifyAuth") authorisedAction: BaseAuthorisedAction,
   config: AppConfig,
   claimsConnector: ClaimsConnector,
-  view: CharityRepaymentDashboardView
+  organisationView: CharityRepaymentDashboardView,
+  agentView: CharityRepaymentDashboardAgentView
 )(using ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -46,11 +47,11 @@ class CharitiesRepaymentDashboardController @Inject() (
       request.charityUser.referenceId match {
         case Some(referenceId) if request.charityUser.userType == UserType.Organisation =>
           for
-            orgName           <- getOrganisationName(referenceId)
+            orgName           <- claimsConnector.getOrganisationName(referenceId).map(_.organisationName)
             getClaimsResponse <- claimsConnector.retrieveUnsubmittedClaims
           yield Ok(
-            view(
-              Some(referenceId),
+            organisationView(
+              referenceId,
               config.makeCharityRepaymentClaimUrl,
               orgName,
               config.giftAidOtherIncomeCommunityBuildingsUrl,
@@ -58,14 +59,34 @@ class CharitiesRepaymentDashboardController @Inject() (
               getClaimsResponse.claimsCount == 1
             )
           )
+
+        case Some(referenceId) if request.charityUser.userType == UserType.Agent =>
+          for
+            agentName         <- claimsConnector.getAgentName(referenceId).map(_.agentName)
+            getClaimsResponse <- claimsConnector.retrieveUnsubmittedClaims
+          yield {
+            val currentPage = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
+            val paginationResult = PaginationService.paginateClaims(
+              allClaims = getClaimsResponse.claimsList,
+              currentPage = currentPage,
+              baseUrl = routes.CharitiesRepaymentDashboardController.onPageLoad.url
+            )
+            Ok(
+              agentView(
+                referenceId,
+                config.makeCharityRepaymentClaimAgentUrl,
+                agentName,
+                config.giftAidOtherIncomeCommunityBuildingsUrl,
+                config.hmrcServicesHomeUrl,
+                paginationViewModel = paginationResult.paginationViewModel,
+                paginationStatus = paginationResult
+              )
+            )
+          }
+
         case _ =>
           Future.successful(Redirect(controllers.routes.AccessDeniedController.onPageLoad))
       }
     }
-
-  private def getOrganisationName(charityReference: String)(using HeaderCarrier): Future[Option[String]] =
-    claimsConnector
-      .getOrganisationName(charityReference)
-      .map(_.organisationName)
 
 }
