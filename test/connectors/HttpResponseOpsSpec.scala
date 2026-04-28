@@ -19,6 +19,7 @@ package connectors
 import util.BaseSpec
 import uk.gov.hmrc.http.HttpResponse
 import connectors.HttpResponseOps.*
+import org.scalatest.matchers.should.Matchers.shouldBe
 import play.api.libs.json.JsObject
 import play.api.libs.json.JsString
 import play.api.libs.json.Reads

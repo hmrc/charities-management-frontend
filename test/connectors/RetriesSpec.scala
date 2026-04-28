@@ -18,13 +18,16 @@ package connectors
 
 import util.BaseSpec
 import connectors.Retries
+
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 import uk.gov.hmrc.http.HttpResponse
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.test.Helpers.*
 import play.api.Configuration
 import com.typesafe.config.ConfigFactory
+import org.scalatest.matchers.should.Matchers.shouldBe
 
 class RetriesSpec extends BaseSpec {
 
