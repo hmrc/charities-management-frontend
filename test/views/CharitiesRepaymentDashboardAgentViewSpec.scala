@@ -40,11 +40,14 @@ class CharitiesRepaymentDashboardAgentViewSpec extends ViewSpec {
         view(
           "ABC123",
           makeRepaymentClaimUrl,
+          makeRepaymentClaimUrl + "?claimId=blank",
+          "/delete-claim",
           agentName,
           giftAidOtherIncomeCommunityBuildingsUrl,
           hmrcServicesHomeUrl,
           paginationResult.paginationViewModel,
-          paginationResult
+          paginationResult,
+          claims
         )
       )
 
