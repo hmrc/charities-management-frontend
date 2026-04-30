@@ -9,7 +9,7 @@ charityRepaymentDashboard.caption.ref = HMRC Charities reference: {0}
 charityRepaymentDashboard.para = Complete any <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Gift Aid, Other Income or Community Building (opens in new tab)</a> schedule spreadsheets before making a new claim.
 charityRepaymentDashboard.subheading = Make a repayment claim
 charityRepaymentDashboard.link.1a = <a class="govuk-link" href="{0}" rel="noreferrer noopener">Use this to make a repayment claim</a>
-charityRepaymentDashboard.link.1b = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Continue with draft claim</a>
+charityRepaymentDashboard.link.1b = <a class="govuk-link" href="{0}" rel="noreferrer noopener">Continue with draft claim</a>
 charityRepaymentDashboard.link.2 = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Use HMRC-recognised software (opens in new tab)</a>
 
 #Charity Repayment Agent Landing Page
