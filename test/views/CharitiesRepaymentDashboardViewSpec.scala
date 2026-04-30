@@ -29,80 +29,18 @@ class CharitiesRepaymentDashboardViewSpec extends ViewSpec {
   private val claimExistTrue: Boolean                 = true
   private val claimExistFalse: Boolean                = false
   private val orgName                                 = Some("Some Org Name")
+  private val ref                                     = "ABC123"
 
   "CharityRepaymentDashboardView" should {
 
     "render title and heading correctly without reference" in {
       val doc =
-        asDocument(view("ABC123", makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
+        asDocument(view(ref, makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
 
       assertTitle(doc, messages("charityRepaymentDashboard.title"))
       assertH1(doc, messages("charityRepaymentDashboard.heading"))
+      assertH3(doc, messages("charityRepaymentDashboard.subheading"))
+      // assertPara(doc, messages("charityRepaymentDashboard.para"))
     }
-
-//    "render the body paragraph" in {
-//      val doc = asDocument(view(None, makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
-//
-//      doc.select("p.govuk-body").text() mustBe messages("charityRepaymentDashboard.para")
-//    }
-//
-//    "render the caption when uReference is provided" in {
-//      val ref = "ABC123"
-//      val doc =
-//        asDocument(view(Some(ref), makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
-//
-//      doc.select("span.govuk-caption-l").text() mustBe
-//        messages("charityRepaymentDashboard.caption.ref", ref)
-//    }
-//
-//    "not render the caption when uReference is not provided" in {
-//      val doc = asDocument(view(None, makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
-//
-//      doc.select("span.govuk-caption-l").isEmpty mustBe true
-//    }
-
-//    "render two cards" in {
-//      val doc = asDocument(view(None, makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
-//
-//      doc.select(".card-group__item").size() mustBe 2
-//    }
-
-//    "render the first card with correct title and description" in {
-//      val doc = asDocument(view(None, makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
-//
-//      val firstCard = doc.select(".card-group__item").first()
-//
-//      firstCard.select(".card__link").text() mustBe
-//        messages("charityRepaymentDashboard.card.1.heading")
-//      firstCard.select(".card__description").text() mustBe
-//        messages("charityRepaymentDashboard.card.1.p")
-//    }
-
-//    "render the second card with correct title and description" in {
-//      val doc = asDocument(view(None, makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
-//
-//      val secondCard = doc.select(".card-group__item").get(1)
-//
-//      secondCard.select(".card__link").text() mustBe
-//        messages("charityRepaymentDashboard.card.2.heading")
-//      secondCard.select(".card__description").text() mustBe
-//        messages("charityRepaymentDashboard.card.2.p")
-//    }
-
-//    "render the link with correct href for the first card" in {
-//      val doc = asDocument(view(None, makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
-//
-//      doc.select(s"a[href='$makeRepaymentClaimUrl']").isEmpty mustBe false
-//    }
-//
-//    "render the link with correct href for the second card" in {
-//      val doc = asDocument(view(None, makeRepaymentClaimUrl, orgName, giftAidOtherIncomeCommunityBuildingsUrl, hmrcServicesHomeUrl, claimExistTrue))
-//
-//      doc
-//        .select(
-//          "a[href='https://www.gov.uk/government/publications/charities-online-commercial-software-suppliers']"
-//        )
-//        .isEmpty mustBe false
-//    }
   }
 }

@@ -18,23 +18,21 @@ package util
 
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
-import org.scalatest.OptionValues
+import org.scalamock.scalatest.MockFactory
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.{Millis, Span}
-import org.scalatestplus.mockito.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 
-import scala.concurrent.ExecutionContext
+abstract class BaseSpec extends AnyFreeSpec with MockFactory with Matchers with ScalaFutures with BeforeAndAfterEach with BeforeAndAfterAll {
 
-trait BaseSpec extends PlaySpec with MockitoSugar with ScalaFutures with OptionValues {
+  implicit val actorSystem: ActorSystem = ActorSystem("unit-tests")
+  implicit val mat: Materializer        = Materializer.createMaterializer(actorSystem)
 
-  given ec: ExecutionContext = scala.concurrent.ExecutionContext.global
-
-  given actorSystem: ActorSystem = ActorSystem("unit-tests")
-
-  given mat: Materializer = Materializer.createMaterializer(actorSystem)
+  override protected def afterAll(): Unit =
+    actorSystem.terminate()
 
   override implicit val patienceConfig: PatienceConfig =
-    PatienceConfig(timeout = scaled(Span(1000, Millis)), interval = scaled(Span(50, Millis)))
-
+    PatienceConfig(timeout = Span(1000, Millis), interval = Span(50, Millis))
 }

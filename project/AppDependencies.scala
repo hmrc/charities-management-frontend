@@ -12,11 +12,14 @@ object AppDependencies {
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-30"         % hmrcMongoVersion
   )
 
-  val test = Seq(
-    "uk.gov.hmrc"       %% "bootstrap-test-play-30"  % bootstrapVersion % Test,
-    "uk.gov.hmrc.mongo" %% "hmrc-mongo-test-play-30" % hmrcMongoVersion % Test,
-    "org.jsoup"          % "jsoup"                   % "1.22.1"         % Test
-  )
+  val test: Seq[ModuleID] = Seq(
+    "uk.gov.hmrc"            %% "bootstrap-test-play-30"  % bootstrapVersion,
+    "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-30" % hmrcMongoVersion,
+    "org.scalatestplus"      %% "scalacheck-1-18"         % "3.2.19.0",
+    "org.jsoup"               % "jsoup"                   % "1.21.2",
+    "com.softwaremill.diffx" %% "diffx-scalatest-should"  % "0.9.0",
+    "org.scalamock"          %% "scalamock"               % "7.5.5"
+  ).map(_ % Test)
 
   val it = Seq.empty
 }
