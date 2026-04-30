@@ -17,21 +17,30 @@
 package controllers.actions
 
 import config.AppConfig
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.*
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.*
 import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.~
-import util.BaseSpec
+import uk.gov.hmrc.http.HeaderCarrier
+import util.{BaseSpec, FakeAuthConnector}
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class IdentifyClaimsAuthActionSpec extends BaseSpec {
 
-  given ExecutionContext = ExecutionContext.global
+  given ExecutionContext         = ExecutionContext.global
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+
+  private val bodyParser = BodyParsers.Default(Helpers.stubPlayBodyParsers)
+
+  private lazy val application: Application =
+    new GuiceApplicationBuilder().build()
+
+  private lazy val appConfig: AppConfig =
+    application.injector.instanceOf[AppConfig]
 
   class Harness(action: IdentifyClaimsAuthAction) {
     def onPageLoad: Action[AnyContent] =
@@ -42,24 +51,19 @@ class IdentifyClaimsAuthActionSpec extends BaseSpec {
       }
   }
 
-  private val bodyParser = BodyParsers.Default(Helpers.stubPlayBodyParsers)
-  private val mockConfig = mock[AppConfig]
-
-  when(mockConfig.loginUrl).thenReturn("/login")
-  when(mockConfig.loginContinueUrl).thenReturn("/continue")
-
   "IdentifyClaimsUserAction" - {
 
     "identify Agent user" in {
-      val mockAuthConnector = mock[AuthConnector]
+
       val enrolments =
         Enrolments(Set(Enrolment("HMRC-CHAR-AGENT", Seq(EnrolmentIdentifier("AGENTCHARID", "A123")), "Activated")))
 
-      when(
-        mockAuthConnector.authorise(any(), any())(any(), any())
-      ).thenReturn(Future.successful(new ~(Some(AffinityGroup.Agent), enrolments)))
+      val fakeAuthConnector =
+        new FakeAuthConnector(
+          Future.successful(new ~(Some(AffinityGroup.Agent), enrolments))
+        )
 
-      val action     = new IdentifyClaimsAuthAction(mockAuthConnector, mockConfig, bodyParser)
+      val action     = new IdentifyClaimsAuthAction(fakeAuthConnector, appConfig, bodyParser)
       val controller = new Harness(action)
 
       val result = controller.onPageLoad(FakeRequest())
@@ -69,15 +73,14 @@ class IdentifyClaimsAuthActionSpec extends BaseSpec {
     }
 
     "identify Organisation user" in {
-      val mockAuthConnector = mock[AuthConnector]
       val enrolments =
         Enrolments(Set(Enrolment("HMRC-CHAR-ORG", Seq(EnrolmentIdentifier("CHARID", "O123")), "Activated")))
 
-      when(
-        mockAuthConnector.authorise(any(), any())(any(), any())
-      ).thenReturn(Future.successful(new ~(Some(AffinityGroup.Organisation), enrolments)))
-
-      val action     = new IdentifyClaimsAuthAction(mockAuthConnector, mockConfig, bodyParser)
+      val fakeAuthConnector =
+        new FakeAuthConnector(
+          Future.successful(new ~(Some(AffinityGroup.Organisation), enrolments))
+        )
+      val action     = new IdentifyClaimsAuthAction(fakeAuthConnector, appConfig, bodyParser)
       val controller = new Harness(action)
 
       val result = controller.onPageLoad(FakeRequest())
@@ -87,13 +90,12 @@ class IdentifyClaimsAuthActionSpec extends BaseSpec {
     }
 
     "identify Individual user" in {
-      val mockAuthConnector = mock[AuthConnector]
+      val fakeAuthConnector =
+        new FakeAuthConnector(
+          Future.successful(new ~(Some(AffinityGroup.Individual), Enrolments(Set.empty)))
+        )
 
-      when(
-        mockAuthConnector.authorise(any(), any())(any(), any())
-      ).thenReturn(Future.successful(new ~(Some(AffinityGroup.Individual), Enrolments(Set.empty))))
-
-      val action     = new IdentifyClaimsAuthAction(mockAuthConnector, mockConfig, bodyParser)
+      val action     = new IdentifyClaimsAuthAction(fakeAuthConnector, appConfig, bodyParser)
       val controller = new Harness(action)
 
       val result = controller.onPageLoad(FakeRequest())

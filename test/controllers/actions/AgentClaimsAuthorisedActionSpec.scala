@@ -17,22 +17,31 @@
 package controllers.actions
 
 import config.AppConfig
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.*
-import org.scalatestplus.mockito.MockitoSugar.mock
+import org.scalatest.OptionValues.*
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.*
 import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.~
-import util.BaseSpec
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext
+import uk.gov.hmrc.http.HeaderCarrier
+import util.{BaseSpec, FakeAuthConnector}
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class AgentClaimsAuthorisedActionSpec extends BaseSpec {
 
   given ExecutionContext = ExecutionContext.global
+
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+
+  private val bodyParser = BodyParsers.Default(Helpers.stubPlayBodyParsers)
+
+  private lazy val application: Application = new GuiceApplicationBuilder().build()
+
+  private lazy val appConfig: AppConfig = application.injector.instanceOf[AppConfig]
 
   class Harness(action: AgentClaimsAuthorisedAction) {
     def onPageLoad: Action[AnyContent] =
@@ -43,24 +52,26 @@ class AgentClaimsAuthorisedActionSpec extends BaseSpec {
       }
   }
 
-  private val bodyParser = BodyParsers.Default(Helpers.stubPlayBodyParsers)
-  private val mockConfig = mock[AppConfig]
-
-  when(mockConfig.loginUrl).thenReturn("/login")
-  when(mockConfig.loginContinueUrl).thenReturn("/continue")
-
   "AgentClaimsAuthorisedAction" - {
 
     "allow Agent with valid enrolment" in {
-      val mockAuthConnector = mock[AuthConnector]
+
       val enrolments =
-        Enrolments(Set(Enrolment("HMRC-CHAR-AGENT", Seq(EnrolmentIdentifier("AGENTCHARID", "A123")), "Activated")))
+        Enrolments(
+          Set(
+            Enrolment(
+              "HMRC-CHAR-AGENT",
+              Seq(EnrolmentIdentifier("AGENTCHARID", "A123")),
+              "Activated"
+            )
+          )
+        )
 
-      when(
-        mockAuthConnector.authorise(any(), any())(any(), any())
-      ).thenReturn(Future.successful(new ~(Some(AffinityGroup.Agent), enrolments)))
-
-      val action     = new AgentClaimsAuthorisedAction(mockAuthConnector, mockConfig, bodyParser)
+      val fakeAuthConnector =
+        new FakeAuthConnector(
+          Future.successful(new ~(Some(AffinityGroup.Agent), enrolments))
+        )
+      val action     = new AgentClaimsAuthorisedAction(fakeAuthConnector, appConfig, bodyParser)
       val controller = new Harness(action)
 
       val result = controller.onPageLoad(FakeRequest())
@@ -70,13 +81,13 @@ class AgentClaimsAuthorisedActionSpec extends BaseSpec {
     }
 
     "deny Agent without enrolment" in {
-      val mockAuthConnector = mock[AuthConnector]
 
-      when(
-        mockAuthConnector.authorise(any(), any())(any(), any())
-      ).thenReturn(Future.successful(new ~(Some(AffinityGroup.Agent), Enrolments(Set.empty))))
+      val fakeAuthConnector =
+        new FakeAuthConnector(
+          Future.successful(new ~(Some(AffinityGroup.Agent), Enrolments(Set.empty)))
+        )
 
-      val action     = new AgentClaimsAuthorisedAction(mockAuthConnector, mockConfig, bodyParser)
+      val action     = new AgentClaimsAuthorisedAction(fakeAuthConnector, appConfig, bodyParser)
       val controller = new Harness(action)
 
       val result = controller.onPageLoad(FakeRequest())
@@ -88,15 +99,23 @@ class AgentClaimsAuthorisedActionSpec extends BaseSpec {
     }
 
     "deny Organisation user" in {
-      val mockAuthConnector = mock[AuthConnector]
       val enrolments =
-        Enrolments(Set(Enrolment("HMRC-CHAR-ORG", Seq(EnrolmentIdentifier("CHARID", "O123")), "Activated")))
+        Enrolments(
+          Set(
+            Enrolment(
+              "HMRC-CHAR-ORG",
+              Seq(EnrolmentIdentifier("CHARID", "O123")),
+              "Activated"
+            )
+          )
+        )
 
-      when(
-        mockAuthConnector.authorise(any(), any())(any(), any())
-      ).thenReturn(Future.successful(new ~(Some(AffinityGroup.Organisation), enrolments)))
+      val fakeAuthConnector =
+        new FakeAuthConnector(
+          Future.successful(new ~(Some(AffinityGroup.Organisation), enrolments))
+        )
 
-      val action     = new AgentClaimsAuthorisedAction(mockAuthConnector, mockConfig, bodyParser)
+      val action     = new AgentClaimsAuthorisedAction(fakeAuthConnector, appConfig, bodyParser)
       val controller = new Harness(action)
 
       val result = controller.onPageLoad(FakeRequest())
@@ -105,6 +124,22 @@ class AgentClaimsAuthorisedActionSpec extends BaseSpec {
       redirectLocation(result) shouldBe Some(
         controllers.routes.AccessDeniedController.onPageLoad.url
       )
+    }
+
+    "redirect to login when AuthorisationException is thrown" in {
+      val fakeAuthConnector =
+        new FakeAuthConnector(
+          Future.failed(new MissingBearerToken())
+        )
+
+      val action     = new AgentClaimsAuthorisedAction(fakeAuthConnector, appConfig, bodyParser)
+      val controller = new Harness(action)
+
+      val result = controller.onPageLoad(FakeRequest())
+
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result).value should include(appConfig.loginUrl)
+      redirectLocation(result).value should include("continue")
     }
   }
 }
