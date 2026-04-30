@@ -26,6 +26,13 @@ charityRepaymentDashboardAgent.link.1a = <a class="govuk-link" href="{0}" rel="n
 charityRepaymentDashboardAgent.link.1b = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Continue with draft claim</a>
 charityRepaymentDashboardAgent.link.2 = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Use HMRC-recognised software (opens in new tab)</a>
 
+charityRepaymentDashboardAgent.table.column.1 = Last visited
+charityRepaymentDashboardAgent.table.column.2 = Charities reference
+charityRepaymentDashboardAgent.table.column.3 = Charity / CASC name
+charityRepaymentDashboardAgent.table.column.4 = 
+charityRepaymentDashboardAgent.nameOfCharity = <a class="govuk-link" href="{1}" rel="noreferrer noopener">{0}</a>
+charityRepaymentDashboardAgent.deleteClaimLink = <a class="govuk-link" href="{1}/{0}" rel="noreferrer noopener">Delete claim</a>
+
 #Error Page
 error.title = Sorry, there is a problem with the service - Charities - GOV.UK
 error.heading = Sorry, there is a problem with the service
@@ -49,4 +56,8 @@ site.pagination.next = Next
 site.pagination.of = of
 site.pagination.page = page
 site.pagination.previous = Previous
+
+data.notApplicable = -
+date.today = Today
+dare.yesterday = Yesterday
 

@@ -22,7 +22,8 @@ import play.api.libs.json.Json
 final case class ClaimInfo(
   claimId: String,
   hmrcCharitiesReference: Option[String] = None,
-  nameOfCharity: Option[String] = None
+  nameOfCharity: Option[String] = None,
+  lastVisitedAt: Option[Long] = None
 )
 
 object ClaimInfo {

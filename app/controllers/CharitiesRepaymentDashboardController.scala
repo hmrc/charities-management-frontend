@@ -74,12 +74,15 @@ class CharitiesRepaymentDashboardController @Inject() (
             Ok(
               agentView(
                 referenceId,
-                config.makeCharityRepaymentClaimAgentUrl,
+                config.makeCharityRepaymentClaimUrl,
+                config.makeCharityRepaymentClaimAgentUrl + "?claimId=blank",
+                "/delete-claim", // TODO: Replace with actual delete claim URL
                 agentName,
                 config.giftAidOtherIncomeCommunityBuildingsUrl,
                 config.hmrcServicesHomeUrl,
                 paginationViewModel = paginationResult.paginationViewModel,
-                paginationStatus = paginationResult
+                paginationStatus = paginationResult,
+                claims = paginationResult.paginatedData
               )
             )
           }
