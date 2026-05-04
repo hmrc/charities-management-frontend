@@ -56,7 +56,8 @@ class CharitiesRepaymentDashboardController @Inject() (
               orgName,
               config.giftAidOtherIncomeCommunityBuildingsUrl,
               config.hmrcServicesHomeUrl,
-              getClaimsResponse.claimsCount == 1
+              getClaimsResponse.claimsCount == 1,
+              config.hmrcRecognisedSoftwareUrl
             )
           )
 

@@ -44,7 +44,7 @@ class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
       when(mockClaimsConnector.getOrganisationName(any())(using any()))
         .thenReturn(Future.successful(GetOrganisationReferenceResponse(Some("Test Org"))))
 
-      when(mockOrgView.apply(eqTo(orgId), any(), any(), any(), any(), any())(any(), any()))
+      when(mockOrgView.apply(eqTo(orgId), any(), any(), any(), any(), any(), any())(any(), any()))
         .thenReturn(Html("<p>Success View</p>"))
 
       val controller = new CharitiesRepaymentDashboardController(cc, fakeOrg(orgId), mockConfig, mockClaimsConnector, mockOrgView, null)
@@ -53,7 +53,7 @@ class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
 
       status(result) mustBe OK
       contentAsString(result) must include("Success View")
-      verify(mockOrgView).apply(eqTo(orgId), any(), any(), any(), any(), any())(any(), any())
+      verify(mockOrgView).apply(eqTo(orgId), any(), any(), any(), any(), any(), any())(any(), any())
     }
   }
 }

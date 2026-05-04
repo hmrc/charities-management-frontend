@@ -26,9 +26,9 @@ import uk.gov.hmrc.charitiesmanagementfrontend.helpers.IntegrationTestSupport
 
 class CharitiesRepaymentDashboardControllerISpec extends AnyWordSpec with Matchers with IntegrationTestSupport {
 
-  private val url = "/charities-management/charity-repayment-dashboard"
+  private val url = "/charities-management/manage-charity-repayment-claim"
 
-  "GET /charity-repayment-dashboard" should {
+  "GET /manage-charity-repayment-claim" should {
 
 //    "return 200 for Organisation user" in {
 //      val app = appWithUser(UserType.Organisation)

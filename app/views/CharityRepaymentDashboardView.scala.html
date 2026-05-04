@@ -22,7 +22,7 @@
 )
 
 @(hmrcCharityReference: String, makeRepaymentClaimUrl: String, orgName: Option[String],
-giftAidOtherIncomeCommunityBuildingsUrl: String, hmrcServicesHomeUrl:String,claimExist: Boolean)(implicit request:Request[?], messages: Messages)
+giftAidOtherIncomeCommunityBuildingsUrl: String, hmrcServicesHomeUrl:String,claimExist: Boolean, hmrcRecognisedSoftwareUrl: String)(implicit request:Request[?], messages: Messages)
 
 @layout(pageTitle = Some(messages("charityRepaymentDashboard.title"))) {
 
@@ -42,7 +42,7 @@ giftAidOtherIncomeCommunityBuildingsUrl: String, hmrcServicesHomeUrl:String,clai
         <p class="govuk-body">@Html(messages("charityRepaymentDashboard.link.1b", makeRepaymentClaimUrl))</p>
     }
 
-    <p class="govuk-body">@Html(messages("charityRepaymentDashboard.link.2", hmrcServicesHomeUrl))</p>
+    <p class="govuk-body">@Html(messages("charityRepaymentDashboard.link.2", hmrcRecognisedSoftwareUrl))</p>
 
 
 }

@@ -2,13 +2,13 @@ service.name = Make a charity tax repayment claim
 service.text = This is your new service
 
 #Charity Repayment Organisation Landing Page
-charityRepaymentDashboard.title = Manage Charity repayment dashboard - Make a charity tax repayment claim - GOV.UK
-charityRepaymentDashboard.heading = Manage Charity repayment claims
+charityRepaymentDashboard.title = Manage charity repayment claim - Make a charity tax repayment claim - GOV.UK
+charityRepaymentDashboard.heading = Manage charity repayment claims
 charityRepaymentDashboard.caption.name = {0}
 charityRepaymentDashboard.caption.ref = HMRC Charities reference: {0}
 charityRepaymentDashboard.para = Complete any <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Gift Aid, Other Income or Community Building (opens in new tab)</a> schedule spreadsheets before making a new claim.
 charityRepaymentDashboard.subheading = Make a repayment claim
-charityRepaymentDashboard.link.1a = <a class="govuk-link" href="{0}" rel="noreferrer noopener">Use this to make a repayment claim</a>
+charityRepaymentDashboard.link.1a = <a class="govuk-link" href="{0}" rel="noreferrer noopener">Use the charities online service</a>
 charityRepaymentDashboard.link.1b = <a class="govuk-link" href="{0}" rel="noreferrer noopener">Continue with draft claim</a>
 charityRepaymentDashboard.link.2 = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Use HMRC-recognised software (opens in new tab)</a>
 
