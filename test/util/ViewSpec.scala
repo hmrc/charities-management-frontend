@@ -38,6 +38,8 @@ trait ViewSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   protected def assertH1(doc: Document, expectedHeading: String): Unit = doc.select("h1").text() mustBe expectedHeading
 
+  protected def assertH2(doc: Document, expectedHeading: String): Unit = doc.select("h2").text() mustBe expectedHeading
+
   protected def assertH3(doc: Document, expectedHeading: String): Unit = doc.select("h3").text() mustBe expectedHeading
 
   protected def assertPara(doc: Document, expectedHeading: String): Unit = doc.select("p").text() mustBe expectedHeading

@@ -81,6 +81,7 @@ class CharitiesRepaymentDashboardController @Inject() (
                 agentName,
                 config.giftAidOtherIncomeCommunityBuildingsUrl,
                 config.hmrcServicesHomeUrl,
+                config.hmrcRecognisedSoftwareUrl,
                 paginationViewModel = paginationResult.paginationViewModel,
                 paginationStatus = paginationResult,
                 claims = paginationResult.paginatedData

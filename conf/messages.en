@@ -48,7 +48,7 @@ session-expired.keep-alive-button-text=Continue
 session-expired.sign-out-button-text=Sign-out
 session-expired-message=For your security, we will time you out in
 
-back.text = Your HMRC Services
+back.custom.text = Your HMRC Services
 
 site.govuk = GOV.UK
 site.pagination.landmark = Pagination
