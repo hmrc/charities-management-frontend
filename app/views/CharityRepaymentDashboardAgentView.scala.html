@@ -35,12 +35,16 @@
    agentName: String,
    giftAidOtherIncomeCommunityBuildingsUrl: String,
    hmrcServicesHomeUrl:String,
+   hmrcRecognisedSoftwareUrl: String,
    paginationViewModel: PaginationViewModel,
    paginationStatus: PaginationStatus,
    claims: Seq[ClaimInfo]
 )(implicit request:Request[?], messages: Messages)
 
-@layout(pageTitle = Some(ViewUtils.titleWithPagination(messages("charityRepaymentDashboardAgent.title"), paginationStatus)))   {
+@layout(
+   pageTitle = Some(ViewUtils.titleWithPagination(messages("charityRepaymentDashboardAgent.title"), paginationStatus)),
+   customBackLinkUrl = Some(hmrcServicesHomeUrl)
+)   {
 
    <span class="govuk-caption-l">@messages("charityRepaymentDashboardAgent.caption.name", agentName)</span>
    
@@ -50,13 +54,13 @@
 
    <p class="govuk-body">@Html(messages("charityRepaymentDashboardAgent.p1", giftAidOtherIncomeCommunityBuildingsUrl))</p>
 
-   <h3 class = "govuk-heading-m">@messages("charityRepaymentDashboardAgent.subheading1")</h3>
+   <h2 class = "govuk-heading-m">@messages("charityRepaymentDashboardAgent.subheading1")</h3>
 
    <p class="govuk-body">@Html(messages("charityRepaymentDashboard.link.1a", repaymentClaimDetailsUrl))</p>
 
-   <p class="govuk-body">@Html(messages("charityRepaymentDashboardAgent.link.2", hmrcServicesHomeUrl))</p>
+   <p class="govuk-body">@Html(messages("charityRepaymentDashboardAgent.link.2", hmrcRecognisedSoftwareUrl))</p>
 
-   <h3 class = "govuk-heading-m">@messages("charityRepaymentDashboardAgent.subheading2")</h3>
+   <h2 class = "govuk-heading-m">@messages("charityRepaymentDashboardAgent.subheading2")</h3>
 
    @if(paginationStatus.totalRecords == 0) {
 

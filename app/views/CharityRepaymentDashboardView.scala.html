@@ -24,7 +24,10 @@
 @(hmrcCharityReference: String, makeRepaymentClaimUrl: String, orgName: Option[String],
 giftAidOtherIncomeCommunityBuildingsUrl: String, hmrcServicesHomeUrl:String,claimExist: Boolean, hmrcRecognisedSoftwareUrl: String)(implicit request:Request[?], messages: Messages)
 
-@layout(pageTitle = Some(messages("charityRepaymentDashboard.title"))) {
+@layout(
+    pageTitle = Some(messages("charityRepaymentDashboard.title")), 
+    customBackLinkUrl = Some(hmrcServicesHomeUrl)
+) {
 
     <span class="govuk-caption-l">@messages("charityRepaymentDashboard.caption.name", orgName.getOrElse(""))</span>
     
@@ -34,7 +37,7 @@ giftAidOtherIncomeCommunityBuildingsUrl: String, hmrcServicesHomeUrl:String,clai
 
     <p class="govuk-body">@Html(messages("charityRepaymentDashboard.para", giftAidOtherIncomeCommunityBuildingsUrl))</p>
 
-    <h3 class = "govuk-heading-m">@messages("charityRepaymentDashboard.subheading")</h3>
+    <h2 class="govuk-heading-m">@messages("charityRepaymentDashboard.subheading")</h3>
     @if(!claimExist) {
         <p class="govuk-body">@Html(messages("charityRepaymentDashboard.link.1a", makeRepaymentClaimUrl))</p>
     }

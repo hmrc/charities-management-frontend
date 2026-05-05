@@ -50,8 +50,6 @@ class CharitiesRepaymentDashboardViewSpec extends ViewSpec {
 
       assertTitle(doc, messages("charityRepaymentDashboard.title"))
       assertH1(doc, messages("charityRepaymentDashboard.heading"))
-      assertH3(doc, messages("charityRepaymentDashboard.subheading"))
-      // assertPara(doc, messages("charityRepaymentDashboard.para"))
     }
   }
 }

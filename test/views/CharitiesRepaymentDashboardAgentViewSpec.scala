@@ -28,6 +28,7 @@ class CharitiesRepaymentDashboardAgentViewSpec extends ViewSpec {
   private val makeRepaymentClaimUrl                   = "/make-repayment-claim"
   private val giftAidOtherIncomeCommunityBuildingsUrl = "/make-gift-aid-other-income-communit-buildings"
   private val hmrcServicesHomeUrl                     = "/hrmc-service-home"
+  private val hmrcRecognisedSoftwareUrl               = "/hrmc-recognised-software"
   private val agentName                               = "Agent Name"
   private val claims = List(ClaimInfo(claimId = "123", hmrcCharitiesReference = Some("ABC123"), nameOfCharity = Some("Charity Name")))
 
@@ -45,6 +46,7 @@ class CharitiesRepaymentDashboardAgentViewSpec extends ViewSpec {
           agentName,
           giftAidOtherIncomeCommunityBuildingsUrl,
           hmrcServicesHomeUrl,
+          hmrcRecognisedSoftwareUrl,
           paginationResult.paginationViewModel,
           paginationResult,
           claims
