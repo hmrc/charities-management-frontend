@@ -41,8 +41,10 @@ trait ClaimsConnector {
   def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse]
 
   def getOrganisationName(charityReference: String)(using hc: HeaderCarrier): Future[GetOrganisationReferenceResponse]
-
+//TODO: Get actual name once set up in backend
   def getAgentName(agentReference: String)(using hc: HeaderCarrier): Future[GetAgentReferenceResponse]
+
+  def deleteClaim(claimId: String)(using hc: HeaderCarrier): Future[Boolean]
 }
 
 class ClaimsConnectorImpl @Inject() (
@@ -90,6 +92,14 @@ class ClaimsConnectorImpl @Inject() (
       payload = None
     )
 
+  final def deleteClaim(claimId: String)(using
+    hc: HeaderCarrier
+  ): Future[Boolean] =
+    callCharitiesClaimsBackend[Nothing, DeleteClaimResponse](
+      method = "DELETE",
+      url = s"$claimsApiUrl/$claimId"
+    ).map(r => r.success)
+
   private def callCharitiesClaimsBackend[I, O](
     method: String,
     url: String,
@@ -104,7 +114,8 @@ class ClaimsConnectorImpl @Inject() (
     logger.info(s"$method $url [requestId=${hc.requestId.map(_.value).getOrElse("-")}]")
     retry(retryIntervals*)(shouldRetry, retryReason) {
       val request: RequestBuilder = method match {
-        case "GET" => http.get(URL(url))
+        case "GET"    => http.get(URL(url))
+        case "DELETE" => http.delete(URL(url))
       }
 
       payload

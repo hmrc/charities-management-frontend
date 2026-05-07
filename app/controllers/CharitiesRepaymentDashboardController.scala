@@ -76,8 +76,7 @@ class CharitiesRepaymentDashboardController @Inject() (
               agentView(
                 referenceId,
                 config.makeCharityRepaymentClaimUrl,
-                config.makeCharityRepaymentClaimAgentUrl + "?claimId=blank",
-                "/delete-claim", // TODO: Replace with actual delete claim URL
+                config.makeCharityRepaymentClaimAgentUrl,
                 agentName,
                 config.giftAidOtherIncomeCommunityBuildingsUrl,
                 config.hmrcServicesHomeUrl,

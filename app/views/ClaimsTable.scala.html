@@ -25,7 +25,7 @@
 
 @this(govukTable: GovukTable)
 
-@(claims: Seq[ClaimInfo], makeRepaymentClaimUrl: String, deleteClaimUrl: String)(implicit request: Request[_], messages: Messages)
+@(claims: Seq[ClaimInfo], makeRepaymentClaimUrl: String)(implicit request: Request[_], messages: Messages)
 
 @govukTable(
     Table(
@@ -40,7 +40,7 @@
                 TableRow(content = Text(claimInfo.lastVisitedAt.map(ViewUtils.formatClaimDateTime).getOrElse(messages("data.notApplicable")))),
                 TableRow(content = Text(claimInfo.hmrcCharitiesReference.getOrElse(messages("data.notApplicable")))),
                 TableRow(content = HtmlContent(claimInfo.nameOfCharity.map(name => messages("charityRepaymentDashboardAgent.nameOfCharity", name, makeRepaymentClaimUrl + "?claimId=" + claimInfo.claimId)).getOrElse(messages("data.notApplicable")))),
-                TableRow(content = HtmlContent(messages("charityRepaymentDashboardAgent.deleteClaimLink", claimInfo.claimId, deleteClaimUrl)))
+                TableRow(content = HtmlContent(messages("charityRepaymentDashboardAgent.deleteClaimLink", claimInfo.claimId, s"${routes.DeleteRepaymentClaimController.onPageLoad(claimInfo.claimId).url}")))
             )
         }
     )

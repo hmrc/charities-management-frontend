@@ -31,7 +31,6 @@
    hmrcCharityReference: String, 
    makeRepaymentClaimUrl: String, 
    repaymentClaimDetailsUrl: String,
-   deleteClaimUrl: String,
    agentName: String,
    giftAidOtherIncomeCommunityBuildingsUrl: String,
    hmrcServicesHomeUrl:String,
@@ -70,7 +69,7 @@
 
       <p class="govuk-body">@Html(messages("charityRepaymentDashboardAgent.p2.1", (paginationStatus.currentPage-1)*10+1, Math.min(paginationStatus.currentPage*10, paginationStatus.totalRecords), paginationStatus.totalRecords))</p>
 
-      @claimsTable(claims, makeRepaymentClaimUrl, deleteClaimUrl)
+      @claimsTable(claims, makeRepaymentClaimUrl)
 
       @govukPagination(paginationViewModel.asPagination)
    }
