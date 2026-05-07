@@ -28,6 +28,7 @@ class AppConfig @Inject() (config: Configuration):
 
   lazy val makeCharityRepaymentClaimUrl: String      = config.get[String]("urls.makeCharityRepaymentClaimUrl")
   lazy val makeCharityRepaymentClaimAgentUrl: String = config.get[String]("urls.makeCharityRepaymentClaimAgentUrl")
+  lazy val deleteAgentClaimUrl: String               = config.get[String]("urls.deleteAgentClaimUrl")
 
   lazy val signOutUrl: String = config.get[String]("urls.signOut")
 
