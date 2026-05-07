@@ -52,7 +52,8 @@ class CharitiesRepaymentDashboardController @Inject() (
           yield Ok(
             organisationView(
               referenceId,
-              config.makeCharityRepaymentClaimUrl,
+              if getClaimsResponse.claimsCount == 1 then config.makeCharityRepaymentClaimUrl
+              else config.makeCharityRepaymentClaimUrl + "?claimId=blank",
               orgName,
               config.giftAidOtherIncomeCommunityBuildingsUrl,
               config.hmrcServicesHomeUrl,
