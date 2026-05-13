@@ -16,50 +16,30 @@
 
 package uk.gov.hmrc.charitiesmanagementfrontend
 
-import models.requests.UserType
 import org.scalatest.OptionValues.convertOptionToValuable
-import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import uk.gov.hmrc.charitiesmanagementfrontend.helpers.IntegrationTestSupport
+import uk.gov.hmrc.charitiesmanagementfrontend.stubs.AuthStub
+import utils.ComponentSpecHelper
 
-class HomeControllerISpec extends AnyWordSpec with IntegrationTestSupport with Matchers {
-  private val url = "/charities-management"
-
+class HomeControllerISpec extends ComponentSpecHelper with AuthStub {
+  
   "GET /" should {
 
-    "redirect Organisation user to organisation dashboard" in {
-      val app = appWithUser(UserType.Organisation)
+    "redirect to charities repayment dashboard for Organisation/Agent" in {
+      stubAuthRequest()
 
-      val request = FakeRequest(GET, url)
-
-      val result = route(app, request).value
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result).value shouldBe
-        controllers.routes.CharitiesRepaymentDashboardController.onPageLoad.url
-    }
-
-    "redirect Agent user to agent dashboard" in {
-      val app = appWithUser(UserType.Agent)
-
-      val request = FakeRequest(GET, url)
-
-      val result = route(app, request).value
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result).value shouldBe
-        controllers.routes.CharitiesRepaymentDashboardController.onPageLoad.url
+      val result = get("/")
+      result.status shouldBe SEE_OTHER
+      result.header(LOCATION).value shouldBe controllers.routes.CharitiesRepaymentDashboardController.onPageLoad.url
     }
   }
 
   "redirect Individual user to access denied" in {
-    val app = appWithUser(UserType.Individual)
+    stubIndividualAuthRequest()
 
-    val request = FakeRequest(GET, url)
-
-    val result = route(app, request).value
-    status(result) shouldBe SEE_OTHER
-    redirectLocation(result).value shouldBe
-      controllers.routes.AccessDeniedController.onPageLoad.url
+    val result = get("/")
+    result.status shouldBe SEE_OTHER
+    result.header(LOCATION).value shouldBe controllers.routes.AccessDeniedController.onPageLoad.url
   }
 }

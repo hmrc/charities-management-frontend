@@ -16,69 +16,54 @@
 
 package uk.gov.hmrc.charitiesmanagementfrontend
 
-import models.requests.UserType
 import org.scalatest.OptionValues.convertOptionToValuable
-import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import uk.gov.hmrc.charitiesmanagementfrontend.helpers.IntegrationTestSupport
+import uk.gov.hmrc.charitiesmanagementfrontend.stubs.AuthStub
+import utils.ComponentSpecHelper
 
 class StartControllerISpec
-  extends AnyWordSpec
-    with Matchers
-    with IntegrationTestSupport {
+  extends ComponentSpecHelper with AuthStub {
 
-  private val startUrl = "/charities-management/start"
-  private val keepAliveUrl = "/charities-management/keep-alive"
-  private val timedOutUrl = "/charities-management/timed-out"
+  private val startUrl = "/start"
+  private val keepAliveUrl = "/keep-alive"
+  private val timedOutUrl = "/timed-out"
 
   "GET /start" should {
     "redirect to HomeController" in {
-      val app = appWithUser(UserType.Organisation)
+      stubAuthRequest()
 
-      val request = FakeRequest(GET, startUrl)
-
-      val result = route(app, request).value
-
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result).value shouldBe
+      val result = get(startUrl)
+      result.status shouldBe SEE_OTHER
+      result.header(LOCATION).value shouldBe
         controllers.routes.HomeController.landingPage.url
     }
   }
 
   "GET /keep-alive" should {
     "return 200 when user is authorised" in {
-      val app = appWithUser(UserType.Organisation)
+      stubAuthRequest()
 
-      val request = FakeRequest(GET, keepAliveUrl)
-
-      val result = route(app, request).value
-
-      status(result) shouldBe OK
+      val result = get(keepAliveUrl)
+      result.status shouldBe OK
     }
 
     "return 200 for Agent user as well" in {
-      val app = appWithUser(UserType.Agent)
+      stubAgentAuthRequest()
 
-      val request = FakeRequest(GET, keepAliveUrl)
-
-      val result = route(app, request).value
-
-      status(result) shouldBe OK
+      val result = get(keepAliveUrl)
+      result.status shouldBe OK
     }
   }
 
   "GET /timed-out" should {
     "redirect to start page" in {
-      val app = appWithUser(UserType.Organisation)
+      stubAuthRequest()
 
-      val request = FakeRequest(GET, timedOutUrl)
+      val result = get(timedOutUrl)
 
-      val result = route(app, request).value
-
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result).value shouldBe
+      result.status shouldBe SEE_OTHER
+      result.header(LOCATION).value shouldBe
         controllers.routes.StartController.start.url
     }
   }
