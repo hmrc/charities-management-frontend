@@ -60,14 +60,14 @@ class ClaimsConnectorImpl @Inject() (
 
   val retryIntervals: Seq[FiniteDuration] = Retries.getConfIntervals("charities-claims", configuration)
 
-  val contextPath: String = servicesConfig
+  private val contextPath: String = servicesConfig
     .getConfString("charities-claims.context-path", "charities-claims")
 
-  val claimsApiUrl: String = s"$baseUrl$contextPath/claims"
+  private val claimsApiUrl: String = s"$baseUrl$contextPath/claims"
 
-  val rdsOrganisationNameApiUrl: String = s"$baseUrl$contextPath/charities/organisations"
+  private val rdsOrganisationNameApiUrl: String = s"$baseUrl$contextPath/charities/organisations"
 
-  val rdsAgentNameApiUrl: String = s"$baseUrl$contextPath/charities/agents"
+  private val rdsAgentNameApiUrl: String = s"$baseUrl$contextPath/charities/agents"
 
   final def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse] =
     callCharitiesClaimsBackend[Nothing, GetClaimsResponse](

@@ -16,39 +16,26 @@
 
 package uk.gov.hmrc.charitiesmanagementfrontend
 
-import org.scalatest.OptionValues.convertOptionToValuable
-import org.scalatest.matchers.should.Matchers
+import org.jsoup.Jsoup
 import org.scalatest.wordspec.AnyWordSpec
-import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import uk.gov.hmrc.charitiesmanagementfrontend.helpers.IntegrationTestSupport
+import uk.gov.hmrc.charitiesmanagementfrontend.stubs.AuthStub
+import utils.ComponentSpecHelper
 
 class AccessDeniedControllerISpec
-  extends AnyWordSpec
-    with Matchers
-    with IntegrationTestSupport {
+  extends ComponentSpecHelper with AuthStub {
 
-  private val url = "/charities-management/there-is-a-problem-access-denied"
+  private val url = "/there-is-a-problem-access-denied"
 
   "GET /there-is-a-problem-access-denied" should {
 
     "return 403 Forbidden" in {
-      val app = appWithUser(models.requests.UserType.Organisation)
+      stubAuthRequest()
 
-      val request = FakeRequest(GET, url)
+      val result = get(url)
 
-      val result = route(app, request).value
-      status(result) shouldBe FORBIDDEN
-    }
-
-    "render the error page" in {
-      val app = appWithUser(models.requests.UserType.Organisation)
-
-      val request = FakeRequest(GET, url)
-
-      val result = route(app, request).value
-      val body = contentAsString(result)
-      body should include("there is a problem")
+      result.status shouldBe FORBIDDEN
+      Jsoup.parse(result.body).title should include(msg("error.title"))
     }
   }
 }
