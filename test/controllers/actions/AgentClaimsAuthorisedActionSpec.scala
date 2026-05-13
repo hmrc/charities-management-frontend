@@ -25,7 +25,6 @@ import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.~
-
 import uk.gov.hmrc.http.HeaderCarrier
 import util.{BaseSpec, FakeAuthConnector}
 
@@ -129,7 +128,7 @@ class AgentClaimsAuthorisedActionSpec extends BaseSpec {
     "redirect to login when AuthorisationException is thrown" in {
       val fakeAuthConnector =
         new FakeAuthConnector(
-          Future.failed(new MissingBearerToken())
+          Future.failed(MissingBearerToken())
         )
 
       val action     = new AgentClaimsAuthorisedAction(fakeAuthConnector, appConfig, bodyParser)

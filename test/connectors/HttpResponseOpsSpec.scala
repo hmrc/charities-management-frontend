@@ -16,19 +16,17 @@
 
 package connectors
 
-import util.BaseSpec
-import uk.gov.hmrc.http.HttpResponse
 import connectors.HttpResponseOps.*
-import org.scalatest.matchers.should.Matchers.shouldBe
-import play.api.libs.json.JsObject
-import play.api.libs.json.JsString
-import play.api.libs.json.Reads
-import play.api.libs.json.Json
 import org.scalatest.EitherValues.*
+import org.scalatest.matchers.should.Matchers.shouldBe
+import play.api.libs.json.{JsObject, JsString, Json, Reads}
+import uk.gov.hmrc.http.HttpResponse
+import util.BaseSpec
 
 class HttpResponseOpsSpec extends BaseSpec {
 
   case class TestResponse(foo: String)
+
   given Reads[TestResponse] = Json.reads[TestResponse]
 
   "HttpResponseOps" - {
@@ -37,22 +35,27 @@ class HttpResponseOpsSpec extends BaseSpec {
         val response = HttpResponse(200, "{\"foo\":\"bar\"}")
         response.parseJSON[JsObject](None) shouldBe Right(JsObject(Seq("foo" -> JsString("bar"))))
       }
+
       "should return deserialised entity if the JSON is valid" in {
         val response = HttpResponse(200, "{\"foo\":\"bar\"}")
         response.parseJSON[TestResponse]() shouldBe Right(TestResponse("bar"))
       }
+
       "should return a Right if the JSON is valid and the path is reachable" in {
         val response = HttpResponse(200, "{\"foo\":\"bar\"}")
         response.parseJSON[JsString](Some("foo")) shouldBe Right(JsString("bar"))
       }
+
       "should return a Left if the JSON is invalid" in {
         val response = HttpResponse(200, "{\"foo\":\"bar\"")
         response.parseJSON[JsObject](None).left.value should include("could not read http response as JSON")
       }
+
       "should return a Left if the path is not reachable" in {
         val response = HttpResponse(200, "{\"foo\":\"bar\"}")
         response.parseJSON[JsString](Some("bar")).left.value should include("no JSON found in body of http response")
       }
+
       "should return a Left if the entity is invalid" in {
         val response = HttpResponse(200, "{\"bar\":\"foo\"}")
         response.parseJSON[TestResponse]().left.value should include("could not parse http response JSON")

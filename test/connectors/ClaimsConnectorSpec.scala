@@ -17,6 +17,7 @@
 package connectors
 
 import com.typesafe.config.ConfigFactory
+import models.{GetAgentReferenceResponse, GetClaimsResponse, GetOrganisationReferenceResponse}
 import play.api.Configuration
 import play.api.libs.json.Json
 import play.api.test.Helpers.*
@@ -26,10 +27,7 @@ import util.{BaseSpec, HttpV2Support}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.FiniteDuration
-import models.GetAgentReferenceResponse
 import scala.language.implicitConversions
-import models.GetClaimsResponse
-import models.GetOrganisationReferenceResponse
 
 class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 

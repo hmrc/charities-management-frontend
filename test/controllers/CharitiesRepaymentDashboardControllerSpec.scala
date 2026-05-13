@@ -15,16 +15,17 @@
  */
 
 package controllers
-import play.api.test.FakeRequest
-import util.ControllerSpecBase
+
 import config.AppConfig
-import views.html.{CharityRepaymentDashboardAgentView, CharityRepaymentDashboardView}
-import models.{GetClaimsResponse, GetOrganisationReferenceResponse}
-import org.mockito.ArgumentMatchers.{any, eq as eqTo}
-import play.api.test.Helpers.*
-import org.mockito.Mockito.*
-import play.twirl.api.Html
 import connectors.ClaimsConnector
+import models.{ClaimInfo, GetAgentReferenceResponse, GetClaimsResponse, GetOrganisationReferenceResponse}
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.*
+import play.api.test.FakeRequest
+import play.api.test.Helpers.*
+import play.twirl.api.Html
+import util.ControllerSpecBase
+import views.html.{CharityRepaymentDashboardAgentView, CharityRepaymentDashboardView}
 
 import scala.concurrent.Future
 
@@ -32,28 +33,143 @@ class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
 
   "CharitiesRepaymentDashboardController onPageLoad" should {
 
-    "return 200 OK and render the CharityRepaymentDashboardView view" in {
-      val mockConfig: AppConfig                = mock[AppConfig]
-      val mockClaimsConnector: ClaimsConnector = mock[ClaimsConnector]
-      val orgId                                = "test-user-123"
-      val mockOrgView                          = mock[CharityRepaymentDashboardView]
+    "return 200 OK and render the CharityRepaymentDashboardView for an Organisation user" in {
+      val mockConfig    = mock[AppConfig]
+      val mockConnector = mock[ClaimsConnector]
+      val orgId         = "test-org-123"
+      val mockOrgView   = mock[CharityRepaymentDashboardView]
+      val mockAgentView = mock[CharityRepaymentDashboardAgentView]
 
-      when(mockClaimsConnector.retrieveUnsubmittedClaims(using any()))
+      when(mockConnector.retrieveUnsubmittedClaims(using any()))
         .thenReturn(Future.successful(GetClaimsResponse(claimsList = List.empty, claimsCount = 0)))
-
-      when(mockClaimsConnector.getOrganisationName(any())(using any()))
+      when(mockConnector.getOrganisationName(any())(using any()))
         .thenReturn(Future.successful(GetOrganisationReferenceResponse(Some("Test Org"))))
-
       when(mockOrgView.apply(eqTo(orgId), any(), any(), any(), any(), any(), any())(any(), any()))
-        .thenReturn(Html("<p>Success View</p>"))
+        .thenReturn(Html("<p>Org View</p>"))
 
-      val controller = new CharitiesRepaymentDashboardController(cc, fakeOrg(orgId), mockConfig, mockClaimsConnector, mockOrgView, null)
+      val controller = new CharitiesRepaymentDashboardController(
+        cc,
+        fakeOrg(orgId),
+        mockConfig,
+        mockConnector,
+        mockOrgView,
+        mockAgentView
+      )
 
       val result = controller.onPageLoad(FakeRequest())
 
       status(result) mustBe OK
-      contentAsString(result) must include("Success View")
+      contentAsString(result) must include("Org View")
       verify(mockOrgView).apply(eqTo(orgId), any(), any(), any(), any(), any(), any())(any(), any())
+    }
+
+    "pass claimsCount == 1 as true to org view when exactly one claim exists" in {
+      val mockConfig    = mock[AppConfig]
+      val mockConnector = mock[ClaimsConnector]
+      val orgId         = "org-with-one-claim"
+      val mockOrgView   = mock[CharityRepaymentDashboardView]
+      val mockAgentView = mock[CharityRepaymentDashboardAgentView]
+
+      when(mockConnector.retrieveUnsubmittedClaims(using any()))
+        .thenReturn(Future.successful(GetClaimsResponse(claimsList = List(ClaimInfo("c1")), claimsCount = 1)))
+      when(mockConnector.getOrganisationName(any())(using any()))
+        .thenReturn(Future.successful(GetOrganisationReferenceResponse(None)))
+      when(mockOrgView.apply(any(), any(), any(), any(), any(), eqTo(true), any())(any(), any()))
+        .thenReturn(Html("<p>One Claim</p>"))
+
+      val controller = new CharitiesRepaymentDashboardController(
+        cc,
+        fakeOrg(orgId),
+        mockConfig,
+        mockConnector,
+        mockOrgView,
+        mockAgentView
+      )
+
+      val result = controller.onPageLoad(FakeRequest())
+
+      status(result) mustBe OK
+      verify(mockOrgView).apply(any(), any(), any(), any(), any(), eqTo(true), any())(any(), any())
+    }
+
+    "return 200 OK and render the CharityRepaymentDashboardAgentView for an Agent user" in {
+      val mockConfig    = mock[AppConfig]
+      val mockConnector = mock[ClaimsConnector]
+      val agentId       = "test-agent-456"
+      val mockOrgView   = mock[CharityRepaymentDashboardView]
+      val mockAgentView = mock[CharityRepaymentDashboardAgentView]
+
+      when(mockConnector.retrieveUnsubmittedClaims(using any()))
+        .thenReturn(Future.successful(GetClaimsResponse(claimsList = List.empty, claimsCount = 0)))
+      when(mockConnector.getAgentName(any())(using any()))
+        .thenReturn(Future.successful(GetAgentReferenceResponse("Agent Name")))
+      when(mockAgentView.apply(eqTo(agentId), any(), any(), any(), any(), any(), any(), any(), any(), any(), any())(any(), any()))
+        .thenReturn(Html("<p>Agent View</p>"))
+
+      val controller = new CharitiesRepaymentDashboardController(
+        cc,
+        fakeAgent(agentId),
+        mockConfig,
+        mockConnector,
+        mockOrgView,
+        mockAgentView
+      )
+
+      val result = controller.onPageLoad(FakeRequest())
+
+      status(result) mustBe OK
+      contentAsString(result) must include("Agent View")
+    }
+
+    "return 200 OK and render agent view with page parameter when page query string is provided" in {
+      val mockConfig    = mock[AppConfig]
+      val mockConnector = mock[ClaimsConnector]
+      val agentId       = "test-agent-789"
+      val mockOrgView   = mock[CharityRepaymentDashboardView]
+      val mockAgentView = mock[CharityRepaymentDashboardAgentView]
+
+      val claimsOnMultiplePages = (1 to 15).map(i => ClaimInfo(s"claim-$i")).toList
+
+      when(mockConnector.retrieveUnsubmittedClaims(using any()))
+        .thenReturn(Future.successful(GetClaimsResponse(claimsList = claimsOnMultiplePages, claimsCount = 15)))
+      when(mockConnector.getAgentName(any())(using any()))
+        .thenReturn(Future.successful(GetAgentReferenceResponse("Paged Agent")))
+      when(mockAgentView.apply(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any())(any(), any()))
+        .thenReturn(Html("<p>Paged Agent View</p>"))
+
+      val controller = new CharitiesRepaymentDashboardController(
+        cc,
+        fakeAgent(agentId),
+        mockConfig,
+        mockConnector,
+        mockOrgView,
+        mockAgentView
+      )
+
+      val result = controller.onPageLoad(FakeRequest().withFormUrlEncodedBody("page" -> "2"))
+
+      status(result) mustBe OK
+    }
+
+    "redirect to AccessDenied when the user is an Individual" in {
+      val mockConfig    = mock[AppConfig]
+      val mockConnector = mock[ClaimsConnector]
+      val mockOrgView   = mock[CharityRepaymentDashboardView]
+      val mockAgentView = mock[CharityRepaymentDashboardAgentView]
+
+      val controller = new CharitiesRepaymentDashboardController(
+        cc,
+        fakeIndividual,
+        mockConfig,
+        mockConnector,
+        mockOrgView,
+        mockAgentView
+      )
+
+      val result = controller.onPageLoad(FakeRequest())
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result).value mustBe controllers.routes.AccessDeniedController.onPageLoad.url
     }
   }
 }
