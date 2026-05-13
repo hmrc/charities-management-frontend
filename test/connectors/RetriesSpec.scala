@@ -30,7 +30,7 @@ import org.scalatest.matchers.should.Matchers.shouldBe
 
 class RetriesSpec extends BaseSpec {
 
-  val retries = new Retries {
+  val retries: Retries = new Retries {
     val actorSystem = RetriesSpec.this.actorSystem
   }
 

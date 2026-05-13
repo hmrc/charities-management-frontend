@@ -16,12 +16,12 @@
 
 package controllers
 
+import models.requests.UserType
 import org.scalatestplus.play.PlaySpec
 import play.api.mvc.AnyContent
 import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
 import util.ControllerSpecBase
-import models.requests.UserType
 
 class HomeControllerSpec extends ControllerSpecBase {
 
