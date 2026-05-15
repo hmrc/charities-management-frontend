@@ -40,7 +40,7 @@
                 TableRow(content = Text(claimInfo.lastVisitedAt.map(ViewUtils.formatClaimDateTime).getOrElse(messages("data.notApplicable")))),
                 TableRow(content = Text(claimInfo.hmrcCharitiesReference.getOrElse(messages("data.notApplicable")))),
                 TableRow(content = HtmlContent(claimInfo.nameOfCharity.map(name => messages("charityRepaymentDashboardAgent.nameOfCharity", name, makeRepaymentClaimUrl + "?claimId=" + claimInfo.claimId)).getOrElse(messages("data.notApplicable")))),
-                TableRow(content = HtmlContent(messages("charityRepaymentDashboardAgent.deleteClaimLink", deleteClaimUrl.replace("{claimId}", claimInfo.claimId))))
+                TableRow(content = HtmlContent(messages("charityRepaymentDashboardAgent.deleteClaimLink", deleteClaimUrl.replace("{claimId}", claimInfo.claimId), claimInfo.nameOfCharity.getOrElse(""))))
             )
         }
     )
