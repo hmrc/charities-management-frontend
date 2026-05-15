@@ -29,9 +29,9 @@ charityRepaymentDashboardAgent.link.2 = <a class="govuk-link" href="{0}" rel="no
 charityRepaymentDashboardAgent.table.column.1 = Last visited
 charityRepaymentDashboardAgent.table.column.2 = Charities reference
 charityRepaymentDashboardAgent.table.column.3 = Charity / CASC name
-charityRepaymentDashboardAgent.table.column.4 = 
+charityRepaymentDashboardAgent.table.column.4 = Delete claim
 charityRepaymentDashboardAgent.nameOfCharity = <a class="govuk-link" href="{1}" rel="noreferrer noopener">{0}</a>
-charityRepaymentDashboardAgent.deleteClaimLink = <a class="govuk-link" href="{0}" rel="noreferrer noopener">Delete claim</a>
+charityRepaymentDashboardAgent.deleteClaimLink = <a class="govuk-link" href="{0}" rel="noreferrer noopener">Delete claim<span class="govuk-visually-hidden"> for {1}</span></a>
 
 #Error Page
 error.title = Sorry, there is a problem with the service - Charities - GOV.UK
