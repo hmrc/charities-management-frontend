@@ -23,18 +23,21 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.backlink.BackLink
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.*
+@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 @import config.AppConfig
 @import views.html.helper.CSPNonce
+@import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
 
 @this(
   appConfig: AppConfig,
   hmrcStandardPage: HmrcStandardPage,
   hmrcTimeoutDialog: uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcTimeoutDialog,
   timeoutDialogConfig: uk.gov.hmrc.hmrcfrontend.config.TimeoutDialogConfig,
-  hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet
-)
+  hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
+  betaBanner: StandardBetaBanner
+)(implicit cfConfig: ContactFrontendConfig)
 
-@(pageTitle: Option[String] = None, showBackLink: Boolean = true, timeOut: Boolean = true, customBackLinkUrl: Option[String] = None)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
+@(pageTitle: Option[String] = None, showBackLink: Boolean = true, timeOut: Boolean = true, customBackLinkUrl: Option[String] = None, showUserBanner: Boolean = false)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
 
 @additionalHeadBlock = {
     <link @{CSPNonce.attr} href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="screen" rel="stylesheet" type="text/css"/>
@@ -66,7 +69,10 @@
         accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl)
     ),
     banners = Banners(
-        userResearchBanner = Some(UserResearchBanner(url = appConfig.researchUrl))
+        phaseBanner = Some(betaBanner()),
+        userResearchBanner = if(showUserBanner) Some(UserResearchBanner(
+            url = appConfig.researchUrl
+            )) else None
     ),
     pageTitle = pageTitle,
     isWelshTranslationAvailable = appConfig.welshLanguageSupportEnabled,
