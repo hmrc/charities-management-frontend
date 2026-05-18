@@ -20,14 +20,14 @@ import config.AppConfig
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.ErrorView
+import views.html.AccessErrorView
 
 import javax.inject.Inject
 
 class AccessDeniedController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   appConfig: AppConfig,
-  view: ErrorView
+  view: AccessErrorView
 ) extends FrontendBaseController
     with I18nSupport {
 

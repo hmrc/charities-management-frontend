@@ -24,7 +24,7 @@ import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.Html
 import util.ControllerSpecBase
-import views.html.ErrorView
+import views.html.AccessErrorView
 
 class AccessDeniedControllerSpec extends ControllerSpecBase {
 
@@ -33,8 +33,8 @@ class AccessDeniedControllerSpec extends ControllerSpecBase {
     "return 403 Forbidden and render the error view" in {
       val accountUrl = "http://example.com/account"
 
-      val mockConfig: AppConfig = mock[AppConfig]
-      val mockView: ErrorView   = mock[ErrorView]
+      val mockConfig: AppConfig     = mock[AppConfig]
+      val mockView: AccessErrorView = mock[AccessErrorView]
 
       when(mockConfig.accountUrl).thenReturn(accountUrl)
       when(mockView.apply(eqTo(accountUrl))(any(), any())).thenReturn(Html("<p>Access denied</p>"))
