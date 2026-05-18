@@ -41,8 +41,8 @@
 
     @if(timeOut) {
         @hmrcTimeoutDialog(TimeoutDialog(
-            timeout = Some(timeoutDialogConfig.timeoutInSeconds),
-            countdown = Some(timeoutDialogConfig.countdownInSeconds),
+            timeout = Some(appConfig.timeoutInSeconds),
+            countdown = Some(appConfig.countdownInSeconds),
             message= Some(messages("session-expired-message")),
             keepAliveUrl= Some(s"${routes.StartController.keepAlive.url}"),
             signOutUrl= Some(appConfig.signOutUrl),
