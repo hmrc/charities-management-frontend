@@ -49,3 +49,7 @@ class AppConfig @Inject() (config: Configuration):
   lazy val giftAidOtherIncomeCommunityBuildingsUrl: String = config.get[String]("urls.giftAidOtherIncomeCommunityBuildingsUrl")
 
   lazy val baseUrl: String = config.get[String]("urls.baseUrl")
+
+  lazy val timeoutInSeconds: Int = config.get[Int]("timeout-dialog.timeout")
+
+  lazy val countdownInSeconds: Int = config.get[Int]("timeout-dialog.countdown")
