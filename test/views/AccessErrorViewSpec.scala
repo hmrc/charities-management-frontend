@@ -18,11 +18,11 @@ package views
 
 import org.scalatestplus.play.*
 import util.ViewSpec
-import views.html.ErrorView
+import views.html.AccessErrorView
 
 class ErrorViewSpec extends ViewSpec {
 
-  private val view       = injectView[ErrorView]
+  private val view       = injectView[AccessErrorView]
   private val accountUrl = "https://test-url"
 
   "ErrorView" should {
