@@ -26,7 +26,7 @@
     }
 
     .card--clickable:hover .card__heading a,.card--clickable:hover .card__link,.card--clickable:active .card__heading a,.card--clickable:active .card__link {
-      color: #003078;
+      color: #0f385c;
       text-decoration: none
     }
 
@@ -39,11 +39,11 @@
     }
 
     .card--clickable:hover {
-      border-color: #b1b4b6
+      border-color: #cecece
     }
 
     .card--clickable:active {
-      border-color: #b1b4b6;
+      border-color: #cecece;
       bottom: -1px
     }
 
