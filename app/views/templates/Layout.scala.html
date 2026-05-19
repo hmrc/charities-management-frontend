@@ -27,10 +27,12 @@
 @import config.AppConfig
 @import views.html.helper.CSPNonce
 @import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
+@import uk.gov.hmrc.hmrcfrontend.views.html.components._
 
 @this(
   appConfig: AppConfig,
   hmrcStandardPage: HmrcStandardPage,
+  hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
   hmrcTimeoutDialog: uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcTimeoutDialog,
   timeoutDialogConfig: uk.gov.hmrc.hmrcfrontend.config.TimeoutDialogConfig,
   hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
@@ -83,7 +85,12 @@
     additionalHeadBlock = Some(additionalHeadBlock)
  )
 )
-)(contentBlock)
+){
+<div>
+    @contentBlock
+    @hmrcReportTechnicalIssueHelper()
+</div>
+}
 
 @{
 //$COVERAGE-OFF$
