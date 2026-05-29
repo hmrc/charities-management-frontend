@@ -6,7 +6,7 @@ charityRepaymentDashboard.title = Manage charity repayment claim - Make a charit
 charityRepaymentDashboard.heading = Manage charity repayment claim
 charityRepaymentDashboard.caption.name = {0}
 charityRepaymentDashboard.caption.ref = HMRC Charities reference: {0}
-charityRepaymentDashboard.para = Complete any <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Gift Aid, Other Income or Community Building (opens in new tab)</a> schedule spreadsheets before making a new claim.
+charityRepaymentDashboard.para = Complete any <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Gift Aid, Other Income or Community Buildings (opens in new tab)</a> schedule spreadsheets before making a new claim.
 charityRepaymentDashboard.subheading = Make a repayment claim
 charityRepaymentDashboard.link.1a = <a class="govuk-link" href="{0}" rel="noreferrer noopener">Use the charities online service</a>
 charityRepaymentDashboard.link.1b = <a class="govuk-link" href="{0}" rel="noreferrer noopener">Continue with draft claim</a>
@@ -17,7 +17,7 @@ charityRepaymentDashboardAgent.title = Manage Charity repayment dashboard - Make
 charityRepaymentDashboardAgent.heading = Manage Charity repayment claims
 charityRepaymentDashboardAgent.caption.name = {0}
 charityRepaymentDashboardAgent.caption.ref = Charities Agent reference: {0}
-charityRepaymentDashboardAgent.p1 = Complete any <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Gift Aid, Other Income or Community Building (opens in new tab)</a> schedule spreadsheets before making a new claim.
+charityRepaymentDashboardAgent.p1 = Complete any <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Gift Aid, Other Income or Community Buildings (opens in new tab)</a> schedule spreadsheets before making a new claim.
 charityRepaymentDashboardAgent.subheading1 = Make a repayment claim
 charityRepaymentDashboardAgent.subheading2 = Draft charity repayment claims
 charityRepaymentDashboardAgent.p2.0 = You have {0} claims in draft.
