@@ -16,9 +16,8 @@
 
 package services
 
-import models.ClaimInfo
 import util.BaseSpec
-import viewmodels.govuk.PaginationFluency.PaginationViewModel
+import models.ClaimInfo
 
 class PaginationServiceSpec extends BaseSpec {
 

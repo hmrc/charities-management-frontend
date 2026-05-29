@@ -51,3 +51,5 @@ class AppConfig @Inject() (config: Configuration):
   lazy val timeoutInSeconds: Int = config.get[Int]("timeout-dialog.timeout")
 
   lazy val countdownInSeconds: Int = config.get[Int]("timeout-dialog.countdown")
+
+  lazy val useRateLimitedAllowList: Boolean = config.get[Boolean]("splitter.trafficSplitEnabled")

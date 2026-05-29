@@ -16,24 +16,22 @@
 
 package utils
 
-import org.mongodb.scala.SingleObservableFuture
-import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.SpanSugar.convertIntToGrainOfTime
-import org.scalatest.wordspec.AnyWordSpec
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
+import play.api.mvc.{Session, SessionCookieBaker}
+import uk.gov.hmrc.crypto.PlainText
+import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.SessionCookieCrypto
+import play.api.libs.ws.*
+import uk.gov.hmrc.http.SessionKeys
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.Application
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Writes
-import play.api.libs.ws.WSBodyWritables.writeableOf_String
-import play.api.libs.ws.{DefaultWSCookie, WSClient, WSCookie, WSRequest, WSResponse}
-import play.api.mvc.{Session, SessionCookieBaker}
 import play.api.test.Helpers.*
-import uk.gov.hmrc.crypto.PlainText
-import uk.gov.hmrc.http.SessionKeys
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
+import play.api.Application
+import play.api.libs.json.Writes
+import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.mongo.test.MongoSupport
-import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.SessionCookieCrypto
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -73,12 +71,14 @@ trait ComponentSpecHelper
 
   def config: Map[String, String] =
     Map(
-      "microservice.services.auth.host"                        -> mockHost,
-      "microservice.services.auth.port"                        -> mockPort,
-      "microservice.services.charities-claims.host"            -> mockHost,
-      "microservice.services.charities-claims.port"            -> mockPort,
-      "auditing.enabled"                                       -> "false",
-      "play.filters.csrf.header.bypassHeaders.Csrf-Token"      -> "nocheck"
+      "microservice.services.auth.host"                    -> mockHost,
+      "microservice.services.auth.port"                    -> mockPort,
+      "microservice.services.charities-claims.host"        -> mockHost,
+      "microservice.services.charities-claims.port"        -> mockPort,
+      "microservice.services.rate-limited-allow-list.host" -> mockHost,
+      "microservice.services.rate-limited-allow-list.port" -> mockPort,
+      "auditing.enabled"                                   -> "false",
+      "play.filters.csrf.header.bypassHeaders.Csrf-Token"  -> "nocheck"
     )
 
   override def beforeAll(): Unit = {
