@@ -28,7 +28,6 @@ class CharitiesRepaymentDashboardViewSpec extends ViewSpec {
   private val hmrcServicesHomeUrl                     = "/hrmc-service-home"
   private val hmrcRecognisedSoftwareUrl               = "/foo"
   private val claimExistTrue: Boolean                 = true
-  private val claimExistFalse: Boolean                = false
   private val orgName                                 = Some("Some Org Name")
   private val ref                                     = "ABC123"
 

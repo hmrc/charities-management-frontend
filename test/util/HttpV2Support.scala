@@ -25,7 +25,10 @@ import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 
 import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
-import org.scalamock.handlers.CallHandler2
+import org.scalamock.handlers.*
+import play.api.libs.json.JsValue
+import play.api.libs.ws.BodyWritable
+import izumi.reflect.Tag
 
 trait HttpV2Support { this: MockFactory & Matchers =>
 
@@ -41,8 +44,21 @@ trait HttpV2Support { this: MockFactory & Matchers =>
   ) =
     mockHttpGetSuccess(URL(expectedUrl))(response)
 
+  def givenPostReturns(
+    expectedUrl: String,
+    requestBody: JsValue,
+    response: HttpResponse
+  ) =
+    mockHttpPostSuccess(URL(expectedUrl), requestBody)(response)
+
   def mockHttpGetSuccess[A](url: URL)(response: A) = {
     mockHttpGet(url).once()
+    mockRequestBuilderExecute(response).once()
+  }
+
+  def mockHttpPostSuccess[A](url: URL, requestBody: JsValue)(response: A) = {
+    mockHttpPost(url).once()
+    mockRequestBuilderWithBody(requestBody).once()
     mockRequestBuilderExecute(response).once()
   }
 
@@ -52,9 +68,24 @@ trait HttpV2Support { this: MockFactory & Matchers =>
       .expects(url, *)
       .returning(mockRequestBuilder)
 
+  def mockHttpPost[A](url: URL) =
+    (mockHttp
+      .post(_: URL)(using _: HeaderCarrier))
+      .expects(url, *)
+      .returning(mockRequestBuilder)
+
   def mockRequestBuilderExecute[A](value: A): CallHandler2[HttpReads[A], ExecutionContext, Future[A]] =
     (mockRequestBuilder
       .execute(using _: HttpReads[A], _: ExecutionContext))
       .expects(*, *)
       .returning(Future.successful(value))
+
+  def mockRequestBuilderWithBody[JsValue](
+    body: JsValue
+  ): CallHandler4[JsValue, BodyWritable[JsValue], Tag[JsValue], ExecutionContext, RequestBuilder] =
+    (mockRequestBuilder
+      .withBody(_: JsValue)(using _: BodyWritable[JsValue], _: Tag[JsValue], _: ExecutionContext))
+      .expects(body, *, *, *)
+      .returning(mockRequestBuilder)
+
 }

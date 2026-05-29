@@ -26,9 +26,7 @@ import utils.ComponentSpecHelper
 
 class CharitiesRepaymentDashboardControllerISpec extends ComponentSpecHelper with AuthStub with ClaimsStub {
 
-  private val url = "/charities-management/manage-charity-repayment-claim"
-
-  private val claimId = "AB123"
+  private val claimId   = "AB123"
   private val reference = "1234567890"
   "GET /manage-charity-repayment-claim" should {
 
