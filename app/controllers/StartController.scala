@@ -20,9 +20,14 @@ import com.google.inject.Inject
 import com.google.inject.name.Named
 import controllers.actions.BaseAuthorisedAction
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.Action
+import play.api.mvc.AnyContent
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
+import javax.inject.Singleton
+
+@Singleton
 class StartController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   @Named("identifyAuth") authorisedAction: BaseAuthorisedAction

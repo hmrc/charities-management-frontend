@@ -22,7 +22,7 @@ import play.api.Configuration
 @Singleton
 class AppConfig @Inject() (config: Configuration):
 
-  val welshLanguageSupportEnabled: Boolean = config.get[Boolean]("features.welsh-language-support")
+  lazy val welshLanguageSupportEnabled: Boolean = config.get[Boolean]("features.welsh-language-support")
 
   lazy val accountUrl: String = config.get[String]("urls.accountUrl")
 
@@ -53,3 +53,7 @@ class AppConfig @Inject() (config: Configuration):
   lazy val countdownInSeconds: Int = config.get[Int]("timeout-dialog.countdown")
 
   lazy val useRateLimitedAllowList: Boolean = config.get[Boolean]("splitter.trafficSplitEnabled")
+
+  lazy val legacyCharitiesServiceUrl: String = config.get[String]("urls.legacyCharitiesServiceUrl")
+
+  lazy val allowListName: String = config.get[String]("splitter.allowListName")
