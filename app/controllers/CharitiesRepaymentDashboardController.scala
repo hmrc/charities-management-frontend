@@ -30,7 +30,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 import javax.inject.Inject
 import services.PaginationService
+import javax.inject.Singleton
 
+@Singleton
 class CharitiesRepaymentDashboardController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   @Named("identifyAuth") authorisedAction: BaseAuthorisedAction,
