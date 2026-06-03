@@ -23,7 +23,7 @@ charityRepaymentDashboardAgent.subheading2 = Hawliadau ad-daliad drafft i elusen
 charityRepaymentDashboardAgent.p2.0 = Nid oes gennych {0} hawliad mewn drafft.
 charityRepaymentDashboardAgent.p2.1 = Yn dangos {0}-{1} o {2} cofnod.
 charityRepaymentDashboardAgent.link.1a = <a class="govuk-link" href="{0}" rel="noreferrer noopener">Defnyddiwch y gwasanaeth elusennau ar-lein</a>
-charityRepaymentDashboardAgent.link.1b = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Continue with draft claim</a>
+charityRepaymentDashboardAgent.link.1b = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Parhau â’r hawliad drafft</a>
 charityRepaymentDashboardAgent.link.2 = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Defnyddiwch feddalwedd a gydnabyddir gan CThEF (yn agor tab newydd)</a>
 
 charityRepaymentDashboardAgent.table.column.1 = Last visited
