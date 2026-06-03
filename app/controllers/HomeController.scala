@@ -48,7 +48,7 @@ class HomeController @Inject() (
         for {
           isAllowed <-
             if appConfig.useRateLimitedAllowList
-            then rateLimitedAllowListConnector.checkAllowList(appConfig.allowListName, request.charityUser.referenceId.get)
+            then rateLimitedAllowListConnector.checkAllowList(appConfig.splitterAllowListName, request.charityUser.referenceId.get)
             else Future.successful(true)
         } yield
           if isAllowed
