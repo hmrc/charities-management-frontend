@@ -1,3 +1,4 @@
 # Add all the application routes to the app.routes file
 ->         /charities-management      app.Routes
+->         /charities                 app.Routes
 ->         /                          health.Routes
