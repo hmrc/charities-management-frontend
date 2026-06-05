@@ -1,4 +1,4 @@
-service.name = charities-management-frontend
+service.name = Gwneud hawliad ad-daliad treth elusenau
 service.text = Dyma'ch gwasanaeth newydd
 
 #Charity Repayment Organisation Landing Page
