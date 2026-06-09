@@ -13,8 +13,8 @@ charityRepaymentDashboard.link.1b = <a class="govuk-link" href="{0}" rel="norefe
 charityRepaymentDashboard.link.2 = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Use HMRC-recognised software (opens in new tab)</a>
 
 #Charity Repayment Agent Landing Page
-charityRepaymentDashboardAgent.title = Manage Charity repayment dashboard - Make a charity tax repayment claim - GOV.UK
-charityRepaymentDashboardAgent.heading = Manage Charity repayment claims
+charityRepaymentDashboardAgent.title = Manage charity repayment claims
+charityRepaymentDashboardAgent.heading = Manage charity repayment claims
 charityRepaymentDashboardAgent.caption.name = {0}
 charityRepaymentDashboardAgent.caption.ref = Charities Agent reference: {0}
 charityRepaymentDashboardAgent.p1 = Complete any <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Gift Aid, Other Income or Community Buildings (opens in new tab)</a> schedule spreadsheets before making a new claim.
@@ -38,10 +38,6 @@ error.title = Sorry, there is a problem with this service - Charities - GOV.UK
 error.heading = Sorry, there is a problem with this service
 error.p = You do not have access to this service.
 error.signInLink = Continue to your account
-
-#Charity Repayment Agent Landing Page
-charityRepaymentDashboardAgent.title = Manage charity repayment claims
-charityRepaymentDashboardAgent.heading = Manage charity repayment claims
 
 #Timeout dialog
 session-expired.keep-alive-button-text=Continue

@@ -13,7 +13,7 @@ charityRepaymentDashboard.link.1b = <a class="govuk-link" href="{0}" rel="norefe
 charityRepaymentDashboard.link.2 = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Defnyddiwch feddalwedd a gydnabyddir gan CThEF (yn agor tab newydd)</a>
 
 #Charity Repayment Agent Landing Page
-charityRepaymentDashboardAgent.title = Rheoli hawliadau ad-daliad elusennau - Gwneud hawliad ad-daliad treth elusennau - GOV.UK
+charityRepaymentDashboardAgent.title = Rheoli hawliad ad-daliad elusennau
 charityRepaymentDashboardAgent.heading = Rheoli hawliad ad-daliad elusennau
 charityRepaymentDashboardAgent.caption.name = {0}
 charityRepaymentDashboardAgent.caption.ref = Cyfeirnod Asiant Elusennau: {0}
@@ -59,7 +59,3 @@ global.error.pageNotFound404.message = Os gwnaethoch deipio’r cyfeiriad gwe, g
 error.heading = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 error.p = Nid oes gennych fynediad at y gwasanaeth hwn.
 error.signInLink = Parhau i’ch cyfrif
-
-#Charity Repayment Agent Landing Page
-charityRepaymentDashboardAgent.title = Rheoli hawliad ad-daliad elusennau
-charityRepaymentDashboardAgent.heading = Rheoli hawliad ad-daliad elusennau
