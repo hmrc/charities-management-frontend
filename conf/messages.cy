@@ -28,7 +28,7 @@ charityRepaymentDashboardAgent.link.2 = <a class="govuk-link" href="{0}" rel="no
 
 charityRepaymentDashboardAgent.table.column.1 = Last visited
 charityRepaymentDashboardAgent.table.column.2 = Cyfeirnod yr elusen
-charityRepaymentDashboardAgent.table.column.3 = Enw’r elusen / CASC
+charityRepaymentDashboardAgent.table.column.3 = Enw’r elusen / CChAC
 charityRepaymentDashboardAgent.table.column.4 = Dileu hawliad
 charityRepaymentDashboardAgent.nameOfCharity = <a class="govuk-link" href="{1}" rel="noreferrer noopener">{0}</a>
 charityRepaymentDashboardAgent.deleteClaimLink = <a class="govuk-link" href="{0}" rel="noreferrer noopener">Dileu hawliad<span class="govuk-visually-hidden"> for {1}</span></a>
