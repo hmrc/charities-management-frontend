@@ -21,12 +21,20 @@ import play.api.mvc.AnyContent
 import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
 import util.ControllerSpecBase
+import views.html.TimedOutView
+import org.mockito.Mockito.*
+import org.mockito.ArgumentMatchers.any
+import play.twirl.api.Html
 
 class StartControllerSpec extends ControllerSpecBase {
 
   val request: FakeRequest[AnyContent] = FakeRequest(GET, "/")
 
-  val controller: StartController = new StartController(cc, fakeOrg())
+  val timedOutView: TimedOutView = mock[TimedOutView]
+
+  when(timedOutView.apply()(any(), any())).thenReturn(Html("<p>Timed Out</p>"))
+
+  val controller: StartController = new StartController(cc, fakeOrg(), timedOutView)
 
   "StartController" should {
 
@@ -44,12 +52,11 @@ class StartControllerSpec extends ControllerSpecBase {
       status(result) mustBe OK
     }
 
-    "redirect to start when timedOut is called" in {
+    "return OK and render the timed out view when timedOut is called" in {
       val result = controller.timedOut(request)
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result).value mustBe
-        controllers.routes.StartController.start.url
+      status(result) mustBe OK
+      contentAsString(result) must include("Timed Out")
     }
   }
 }

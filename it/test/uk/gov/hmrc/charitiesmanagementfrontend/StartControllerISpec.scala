@@ -21,6 +21,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import play.api.test.Helpers.*
 import uk.gov.hmrc.charitiesmanagementfrontend.stubs.AuthStub
 import utils.ComponentSpecHelper
+import play.api.libs.ws.readableAsString
 
 class StartControllerISpec
   extends ComponentSpecHelper with AuthStub {
@@ -57,14 +58,13 @@ class StartControllerISpec
   }
 
   "GET /timed-out" should {
-    "redirect to start page" in {
+    "return 200" in {
       stubAuthRequest()
 
       val result = get(timedOutUrl)
 
-      result.status shouldBe SEE_OTHER
-      result.header(LOCATION).value shouldBe
-        controllers.routes.StartController.start.url
+      result.status shouldBe OK
+      result.body[String] should include("For your security, we signed you out")
     }
   }
 }

@@ -59,3 +59,5 @@ class AppConfig @Inject() (config: Configuration):
   lazy val splitterAllowListName: String = config.get[String]("splitter.allowListName")
 
   lazy val splitterServiceName: String = config.get[String]("splitter.serviceName")
+
+  lazy val feedbackUrl: String = config.get[String]("urls.feedbackUrl")
