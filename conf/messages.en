@@ -65,3 +65,7 @@ global.error.accessDenied.message = You do not have access to this service.<br><
 global.error.accessDenied.title = Sorry, there is a problem with the service
 global.error.pageNotFound404.heading = Page not found
 global.error.pageNotFound404.message = If you typed the web address, check it is correct.<br>If you pasted the web address, check you copied the entire address.<br>If the web address is correct or you selected a link or button, contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services" target="_blank">HMRC Online Services Helpdesk (opens in new tab)</a> if you need to speak to someone.
+
+timedOut.title = For your security, we signed you out
+timedOut.heading = For your security, we signed you out
+timedOut.button = Sign in

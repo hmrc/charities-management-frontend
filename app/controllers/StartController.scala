@@ -24,13 +24,15 @@ import play.api.mvc.Action
 import play.api.mvc.AnyContent
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.TimedOutView
 
 import javax.inject.Singleton
 
 @Singleton
 class StartController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  @Named("identifyAuth") authorisedAction: BaseAuthorisedAction
+  @Named("identifyAuth") authorisedAction: BaseAuthorisedAction,
+  timedOutView: TimedOutView
 ) extends FrontendBaseController
     with I18nSupport {
 
@@ -41,5 +43,5 @@ class StartController @Inject() (
     authorisedAction(_ => Ok)
 
   val timedOut: Action[AnyContent] =
-    Action(implicit request => Redirect(routes.StartController.start.url))
+    Action(implicit request => Ok(timedOutView()))
 }

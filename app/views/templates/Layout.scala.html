@@ -28,6 +28,7 @@
 @import views.html.helper.CSPNonce
 @import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
 @import uk.gov.hmrc.hmrcfrontend.views.html.components._
+@import java.net.URLEncoder
 
 @this(
   appConfig: AppConfig,
@@ -46,12 +47,9 @@
         @hmrcTimeoutDialog(TimeoutDialog(
             timeout = Some(appConfig.timeoutInSeconds),
             countdown = Some(appConfig.countdownInSeconds),
-            message= Some(messages("session-expired-message")),
             keepAliveUrl= Some(s"${routes.StartController.keepAlive.url}"),
-            signOutUrl= Some(appConfig.signOutUrl),
-            timeoutUrl= Some(s"${routes.StartController.timedOut.url}"),
-            keepAliveButtonText= Some(messages("session-expired.keep-alive-button-text")),
-            signOutButtonText= Some(messages("session-expired.sign-out-button-text")),
+            signOutUrl= Some(s"${appConfig.signOutUrl}?continue=${URLEncoder.encode(appConfig.feedbackUrl, "UTF-8")}"),
+            timeoutUrl= Some(s"${appConfig.signOutUrl}?continue=${URLEncoder.encode(appConfig.baseUrl + routes.StartController.start.url, "UTF-8")}"),
             language = Some(messages.lang.code),
             synchroniseTabs = Some(true)
             )
@@ -65,7 +63,7 @@
   HmrcStandardPageParams(
     serviceURLs = ServiceURLs(
         serviceUrl = Some(appConfig.homePageUrl),
-        signOutUrl = Some(appConfig.signOutUrl)
+        signOutUrl = Some(s"${appConfig.signOutUrl}?continue=${URLEncoder.encode(appConfig.feedbackUrl, "UTF-8")}")
     ),
     banners = Banners(
         phaseBanner = Some(betaBanner()),

@@ -59,3 +59,7 @@ global.error.pageNotFound404.message = Os gwnaethoch deipio’r cyfeiriad gwe, g
 error.heading = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 error.p = Nid oes gennych fynediad at y gwasanaeth hwn.
 error.signInLink = Parhau i’ch cyfrif
+
+timedOut.title = Er eich diogelwch, gwnaethom eich allgofnodi
+timedOut.heading = Er eich diogelwch, gwnaethom eich allgofnodi
+timedOut.button = Mewngofnodi
