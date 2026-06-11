@@ -26,7 +26,7 @@ charityRepaymentDashboardAgent.link.1a = <a class="govuk-link" href="{0}" rel="n
 charityRepaymentDashboardAgent.link.1b = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Parhau â’r hawliad drafft</a>
 charityRepaymentDashboardAgent.link.2 = <a class="govuk-link" href="{0}" rel="noreferrer noopener" target="_blank">Defnyddiwch feddalwedd a gydnabyddir gan CThEF (yn agor tab newydd)</a>
 
-charityRepaymentDashboardAgent.table.column.1 = Last visited
+charityRepaymentDashboardAgent.table.column.1 = Ymwelwyd diwethaf
 charityRepaymentDashboardAgent.table.column.2 = Cyfeirnod yr elusen
 charityRepaymentDashboardAgent.table.column.3 = Enw’r elusen / CChAC
 charityRepaymentDashboardAgent.table.column.4 = Dileu hawliad
@@ -36,7 +36,7 @@ charityRepaymentDashboardAgent.deleteClaimLink = <a class="govuk-link" href="{0}
 back.custom.text = Eich gwasanaethau CThEF
 
 site.govuk = GOV.UK
-site.pagination.landmark = Pagination
+site.pagination.landmark = Rhifo tudalennau
 site.pagination.next = Nesaf
 site.pagination.of = o
 site.pagination.page = Tudalen
