@@ -45,35 +45,6 @@ class HomeController @Inject() (
     with I18nSupport
     with Logging {
 
-  /*  def landingPage(path: String): Action[AnyContent] = identifyUser.async { implicit request =>
-    request.charityUser.userType match {
-      case Organisation | Agent =>
-        for {
-          isAllowed <-
-            if appConfig.useRateLimitedAllowList
-            then rateLimitedAllowListConnector.checkAllowList(appConfig.splitterAllowListName, request.charityUser.referenceId.get)
-            else Future.successful(true)
-        } yield
-          if isAllowed
-          then Redirect(controllers.routes.CharitiesRepaymentDashboardController.onPageLoad)
-          else {
-            val userTypeText = request.charityUser.userType match {
-              case Agent => "agent"
-              case _     => "org"
-            }
-
-            val url = s"${appConfig.legacyCharitiesServiceUrl}/$userTypeText/${request.charityUser.referenceId.get}/at-a-glance?lang=eng"
-            logger.info(s"Redirecting to charities legacy service to $url")
-
-            Redirect(url)
-          }
-
-      case _ =>
-        logger.warn(s"Unrecognised user type, redirecting to access denied")
-        Future.successful(Redirect(controllers.routes.AccessDeniedController.onPageLoad))
-    }
-  }*/
-
   def landingPage(path: String): Action[AnyContent] = identifyUser.andThen(splitterAction) { implicit request =>
     request.charityUser.userType match {
       case UserType.Organisation | UserType.Agent =>
