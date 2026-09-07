@@ -31,13 +31,11 @@ import scala.concurrent.{ExecutionContext, Future}
 import javax.inject.Inject
 import services.PaginationService
 import javax.inject.Singleton
-import controllers.actions.SplitterAction
 
 @Singleton
 class CharitiesRepaymentDashboardController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   @Named("identifyAuth") authorisedAction: BaseAuthorisedAction,
-  splitterAction: SplitterAction,
   config: AppConfig,
   claimsConnector: ClaimsConnector,
   organisationView: CharityRepaymentDashboardView,
@@ -48,7 +46,6 @@ class CharitiesRepaymentDashboardController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     authorisedAction
-      .andThen(splitterAction)
       .async { implicit request =>
         request.charityUser.referenceId match {
           case Some(referenceId) if request.charityUser.userType == UserType.Organisation =>
