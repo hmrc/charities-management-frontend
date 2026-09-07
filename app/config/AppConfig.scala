@@ -52,6 +52,4 @@ class AppConfig @Inject() (config: Configuration):
 
   lazy val countdownInSeconds: Int = config.get[Int]("timeout-dialog.countdown")
 
-  lazy val legacyCharitiesServiceUrl: String = config.get[String]("urls.legacyCharitiesServiceUrl")
-
   lazy val feedbackUrl: String = config.get[String]("urls.feedbackUrl")
