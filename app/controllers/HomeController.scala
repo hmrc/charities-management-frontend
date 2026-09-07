@@ -17,7 +17,7 @@
 package controllers
 
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import controllers.actions.{BaseAuthorisedAction, SplitterAction}
+import controllers.actions.BaseAuthorisedAction
 import com.google.inject.name.Named
 import play.api.Logging
 import play.api.i18n.I18nSupport
@@ -29,20 +29,18 @@ import models.requests.UserType
 @Singleton
 class HomeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  @Named("identifyAuth") identifyUser: BaseAuthorisedAction,
-  splitterAction: SplitterAction
+  @Named("identifyAuth") identifyUser: BaseAuthorisedAction
 ) extends FrontendBaseController
     with I18nSupport
     with Logging {
 
   def landingPage: Action[AnyContent] =
-    identifyUser
-      .andThen(splitterAction) { implicit request =>
-        request.charityUser.userType match {
-          case UserType.Organisation | UserType.Agent =>
-            Redirect(controllers.routes.CharitiesRepaymentDashboardController.onPageLoad)
-          case _ =>
-            Redirect(controllers.routes.AccessDeniedController.onPageLoad)
-        }
+    identifyUser { implicit request =>
+      request.charityUser.userType match {
+        case UserType.Organisation | UserType.Agent =>
+          Redirect(controllers.routes.CharitiesRepaymentDashboardController.onPageLoad)
+        case _ =>
+          Redirect(controllers.routes.AccessDeniedController.onPageLoad)
       }
+    }
 }

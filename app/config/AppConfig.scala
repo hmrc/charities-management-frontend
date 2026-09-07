@@ -52,12 +52,6 @@ class AppConfig @Inject() (config: Configuration):
 
   lazy val countdownInSeconds: Int = config.get[Int]("timeout-dialog.countdown")
 
-  lazy val useRateLimitedAllowList: Boolean = config.get[Boolean]("splitter.trafficSplitEnabled")
-
   lazy val legacyCharitiesServiceUrl: String = config.get[String]("urls.legacyCharitiesServiceUrl")
-
-  lazy val splitterAllowListName: String = config.get[String]("splitter.allowListName")
-
-  lazy val splitterServiceName: String = config.get[String]("splitter.serviceName")
 
   lazy val feedbackUrl: String = config.get[String]("urls.feedbackUrl")
