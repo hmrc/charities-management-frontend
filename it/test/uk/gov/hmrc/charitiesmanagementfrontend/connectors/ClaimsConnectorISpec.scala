@@ -46,7 +46,7 @@ class ClaimsConnectorISpec extends ComponentSpecHelper with WiremockMethods {
           )
         )
 
-      when(GET, "/charities-claims/claims\\?claimSubmitted=false")
+      when(GET, "/charities-claims/claims")
         .thenReturn(OK, response)
 
       val result = connector.retrieveUnsubmittedClaims.futureValue

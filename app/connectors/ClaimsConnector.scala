@@ -71,8 +71,6 @@ class ClaimsConnectorImpl @Inject() (
   private val contextPath: String = servicesConfig
     .getConfString("charities-claims.context-path", "charities-claims")
 
-  private val claimsApiUrl: String = s"$baseUrl$contextPath/claims"
-
   private val rdsOrganisationNameApiUrl: String = s"$baseUrl$contextPath/charities/organisations"
 
   private val rdsAgentNameApiUrl: String = s"$baseUrl$contextPath/charities/agents"
@@ -80,7 +78,7 @@ class ClaimsConnectorImpl @Inject() (
   final def retrieveUnsubmittedClaims(using hc: HeaderCarrier): Future[GetClaimsResponse] =
     callCharitiesClaimsBackend[Nothing, GetClaimsResponse](
       method = "GET",
-      url = s"$claimsApiUrl?claimSubmitted=false",
+      url = s"$baseUrl$contextPath/claims",
       payload = None
     )
 

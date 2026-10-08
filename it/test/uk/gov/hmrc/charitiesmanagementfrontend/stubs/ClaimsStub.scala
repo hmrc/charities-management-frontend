@@ -23,7 +23,7 @@ import utils.WiremockMethods
 trait ClaimsStub extends WiremockMethods {
 
   def stubRetrieveUnsubmittedClaims(status: Int, body: JsValue = Json.obj()): StubMapping =
-    when(GET, uri = "/charities-claims/claims\\?claimSubmitted=false")
+    when(GET, uri = "/charities-claims/claims")
       .thenReturn(status, body)
 
   def stubGetOrganisationName(reference: String)(status: Int, body: JsValue = Json.obj()): StubMapping =

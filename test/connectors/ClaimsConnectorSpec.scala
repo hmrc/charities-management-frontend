@@ -59,7 +59,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
   given HeaderCarrier = HeaderCarrier()
 
   private val baseClaimsUrl =
-    "http://foo.bar.com:1234/charities-claims/claims?claimSubmitted=false"
+    "http://foo.bar.com:1234/charities-claims/claims"
 
   private val orgUrl =
     "http://foo.bar.com:1234/charities-claims/charities/organisations/123456"
