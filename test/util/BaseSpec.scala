@@ -18,14 +18,13 @@ package util
 
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
-import org.scalamock.scalatest.MockFactory
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.{Millis, Span}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 
-abstract class BaseSpec extends AnyFreeSpec with MockFactory with Matchers with ScalaFutures with BeforeAndAfterEach with BeforeAndAfterAll {
+abstract class BaseSpec extends AnyFreeSpec with Matchers with ScalaFutures with BeforeAndAfterEach with BeforeAndAfterAll {
 
   implicit val actorSystem: ActorSystem = ActorSystem("unit-tests")
   implicit val mat: Materializer        = Materializer.createMaterializer(actorSystem)

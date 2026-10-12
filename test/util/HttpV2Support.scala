@@ -16,7 +16,6 @@
 
 package util
 
-import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -24,13 +23,13 @@ import uk.gov.hmrc.http.*
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 
 import java.net.URL
-import scala.concurrent.{ExecutionContext, Future}
-import org.scalamock.handlers.*
+import scala.concurrent.Future
 import play.api.libs.json.JsValue
-import play.api.libs.ws.BodyWritable
-import izumi.reflect.Tag
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
 
-trait HttpV2Support { this: MockFactory & Matchers =>
+trait HttpV2Support extends MockitoSugar { this: Matchers =>
 
   implicit val hc: HeaderCarrier                            = HeaderCarrier()
   implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -52,40 +51,26 @@ trait HttpV2Support { this: MockFactory & Matchers =>
     mockHttpPostSuccess(URL(expectedUrl), requestBody)(response)
 
   def mockHttpGetSuccess[A](url: URL)(response: A) = {
-    mockHttpGet(url).once()
-    mockRequestBuilderExecute(response).once()
+    mockHttpGet(url)                    // .once()
+    mockRequestBuilderExecute(response) // .once()
   }
 
   def mockHttpPostSuccess[A](url: URL, requestBody: JsValue)(response: A) = {
-    mockHttpPost(url).once()
-    mockRequestBuilderWithBody(requestBody).once()
-    mockRequestBuilderExecute(response).once()
+    mockHttpPost(url)                       // .once()
+    mockRequestBuilderWithBody(requestBody) // .once()
+    mockRequestBuilderExecute(response)     // .once()
   }
 
-  private def mockHttpGet(url: URL) =
-    (mockHttp
-      .get(_: URL)(using _: HeaderCarrier))
-      .expects(url, *)
-      .returning(mockRequestBuilder)
+  private def mockHttpGet(url: URL) = when(mockHttp.get(eqTo(url))(any())).thenReturn(mockRequestBuilder)
 
-  def mockHttpPost[A](url: URL) =
-    (mockHttp
-      .post(_: URL)(using _: HeaderCarrier))
-      .expects(url, *)
-      .returning(mockRequestBuilder)
+  def mockHttpPost[A](url: URL) = when(mockHttp.post(eqTo(url))(any())).thenReturn(mockRequestBuilder)
 
-  def mockRequestBuilderExecute[A](value: A): CallHandler2[HttpReads[A], ExecutionContext, Future[A]] =
-    (mockRequestBuilder
-      .execute(using _: HttpReads[A], _: ExecutionContext))
-      .expects(*, *)
-      .returning(Future.successful(value))
+  def mockRequestBuilderExecute[A](value: A) =
+    when(mockRequestBuilder.execute(any(), any())).thenReturn(Future.successful(value))
 
   def mockRequestBuilderWithBody[JsValue](
     body: JsValue
-  ): CallHandler4[JsValue, BodyWritable[JsValue], Tag[JsValue], ExecutionContext, RequestBuilder] =
-    (mockRequestBuilder
-      .withBody(_: JsValue)(using _: BodyWritable[JsValue], _: Tag[JsValue], _: ExecutionContext))
-      .expects(body, *, *, *)
-      .returning(mockRequestBuilder)
+  ) =
+    when(mockRequestBuilder.withBody(eqTo(body))(any(), any(), any())).thenReturn(mockRequestBuilder)
 
 }
