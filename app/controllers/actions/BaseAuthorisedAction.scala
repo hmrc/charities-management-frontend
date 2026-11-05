@@ -81,7 +81,7 @@ class AgentClaimsAuthorisedAction @Inject() (
           BaseAuthorisedAction
             .agentEnrolmentId(enrolments)
             .fold {
-              logger.warn(s"Agent has no HMRC-CHAR-AGENT enrolment, denying access")
+              logger.warn("Agent has no HMRC-CHAR-AGENT enrolment, denying access")
               accessDenied
             }(agentId => block(AuthorisedRequest(request, CharityUser(UserType.Agent, Some(agentId)))))
 
@@ -110,7 +110,7 @@ class OrgClaimsAuthorisedAction @Inject() (
           BaseAuthorisedAction
             .orgEnrolmentId(enrolments)
             .fold {
-              logger.warn(s"Organisation has no HMRC-CHAR-ORG enrolment, denying access")
+              logger.warn("Organisation has no HMRC-CHAR-ORG enrolment, denying access")
               accessDenied
             }(orgId => block(AuthorisedRequest(request, CharityUser(UserType.Organisation, Some(orgId)))))
 
