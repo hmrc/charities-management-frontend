@@ -19,7 +19,6 @@ package config
 object Constants {
   object PaginationConfig {
     inline val recordsPerPage  = 10
-    inline val maxRecords      = 10000
     inline val maxVisiblePages = 3
   }
 
