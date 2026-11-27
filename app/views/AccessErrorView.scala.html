@@ -15,6 +15,7 @@
  *@
 
 @import play.twirl.api.Html
+@import config.Constants.Css
 
 @this(
 layout: templates.Layout
@@ -23,12 +24,12 @@ layout: templates.Layout
 @(accountUrl: String)(implicit request:Request[?], messages: Messages)
 
 @layout(pageTitle = Some(messages("error.title")), showBackLink = false) {
-  <h1 class="govuk-heading-xl">@messages("error.heading")</h1>
+  <h1 class="@Css.headingXLCssClass">@messages("error.heading")</h1>
 
-  <p class="govuk-body">@messages("error.p")</p>
+  <p class="@Css.bodyCssClass">@messages("error.p")</p>
 
-  <p class="govuk-body">
-     <a class="govuk-link" rel="noreferrer noopener" href="@accountUrl">@messages("error.signInLink")</a>
+  <p class="@Css.bodyCssClass">
+     <a class="@Css.linkCssClass" rel="noreferrer noopener" href="@accountUrl">@messages("error.signInLink")</a>
   </p>
 
 }

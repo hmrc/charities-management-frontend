@@ -14,12 +14,14 @@
  * limitations under the License.
  *@
 
-@(columnsClass: String = "govuk-grid-column-one-half")(cards: Seq[Html])
+@import config.Constants.Css
 
-<div class="govuk-width-container">
-    <ul class="govuk-grid-row card-group">
+@(columnsClass: String = Css.gridColumnOneHalfCssClass)(cards: Seq[Html])
+
+<div class="@Css.widthContainerCssClass">
+    <ul class="@Css.gridRowCssClass @Css.cardGroupCssClass">
         @for(card <- cards) {
-        <li class="@columnsClass card-group__item">
+        <li class="@columnsClass @Css.cardGroupItemCssClass">
             @card
         </li>
         }

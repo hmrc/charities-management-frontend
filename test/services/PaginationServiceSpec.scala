@@ -16,6 +16,7 @@
 
 package services
 
+import config.Constants.PaginationConfig
 import util.BaseSpec
 import models.ClaimInfo
 
@@ -42,12 +43,12 @@ class PaginationServiceSpec extends BaseSpec {
       }
     }
 
-    "with exactly 10 claims (one full page)" - {
+    s"with exactly ${PaginationConfig.recordsPerPage} claims (one full page)" - {
       "return all 10 on page 1 with no pagination links" in {
-        val claims = makeClaimInfos(10)
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage)
         val result = PaginationService.paginateClaims(claims, 1, baseUrl)
 
-        result.totalRecords shouldBe 10
+        result.totalRecords shouldBe PaginationConfig.recordsPerPage
         result.currentPage shouldBe 1
         result.totalPages shouldBe 1
         result.paginatedData shouldBe claims
@@ -57,46 +58,46 @@ class PaginationServiceSpec extends BaseSpec {
       }
     }
 
-    "with 11 claims (two pages)" - {
-      "return first 10 on page 1 with a next link but no previous" in {
-        val claims = makeClaimInfos(11)
+    s"with ${PaginationConfig.recordsPerPage + 1} claims (two pages)" - {
+      s"return first ${PaginationConfig.recordsPerPage} on page 1 with a next link but no previous" in {
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage + 1)
         val result = PaginationService.paginateClaims(claims, 1, baseUrl)
 
-        result.totalRecords shouldBe 11
+        result.totalRecords shouldBe PaginationConfig.recordsPerPage + 1
         result.currentPage shouldBe 1
         result.totalPages shouldBe 2
-        result.paginatedData shouldBe claims.take(10)
+        result.paginatedData shouldBe claims.take(PaginationConfig.recordsPerPage)
         result.paginationViewModel.previous shouldBe None
         result.paginationViewModel.next.isDefined shouldBe true
         result.paginationViewModel.next.map(_.href) shouldBe Some(s"$baseUrl?page=2")
       }
 
       "return the remaining 1 on page 2 with a previous link but no next" in {
-        val claims = makeClaimInfos(11)
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage + 1)
         val result = PaginationService.paginateClaims(claims, 2, baseUrl)
 
         result.currentPage shouldBe 2
-        result.paginatedData shouldBe claims.drop(10)
+        result.paginatedData shouldBe claims.drop(PaginationConfig.recordsPerPage)
         result.paginationViewModel.previous.isDefined shouldBe true
         result.paginationViewModel.previous.map(_.href) shouldBe Some(s"$baseUrl?page=1")
         result.paginationViewModel.next shouldBe None
       }
     }
 
-    "with 30 claims (three pages)" - {
+    s"with ${PaginationConfig.recordsPerPage * 3} claims (three pages)" - {
       "return correct slice for page 2 with both previous and next links" in {
-        val claims = makeClaimInfos(30)
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage * 3)
         val result = PaginationService.paginateClaims(claims, 2, baseUrl)
 
         result.currentPage shouldBe 2
         result.totalPages shouldBe 3
-        result.paginatedData shouldBe claims.slice(10, 20)
+        result.paginatedData shouldBe claims.slice(PaginationConfig.recordsPerPage, PaginationConfig.recordsPerPage * 2)
         result.paginationViewModel.previous.map(_.href) shouldBe Some(s"$baseUrl?page=1")
         result.paginationViewModel.next.map(_.href) shouldBe Some(s"$baseUrl?page=3")
       }
 
       "have a page item marked as current for the active page" in {
-        val claims = makeClaimInfos(30)
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage * 3)
         val result = PaginationService.paginateClaims(claims, 2, baseUrl)
         val items  = result.paginationViewModel.items
 
@@ -107,7 +108,7 @@ class PaginationServiceSpec extends BaseSpec {
 
     "page range and ellipsis logic" - {
       "show only page 1 and ellipsis and last page when current page is near the start of many pages" in {
-        val claims = makeClaimInfos(100) // 10 pages
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage * 10) // 10 pages
         val result = PaginationService.paginateClaims(claims, 1, baseUrl)
         val items  = result.paginationViewModel.items
 
@@ -117,17 +118,17 @@ class PaginationServiceSpec extends BaseSpec {
       }
 
       "show ellipsis on both sides when current page is in the middle of many pages" in {
-        val claims = makeClaimInfos(100) // 10 pages
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage * 10) // 10 pages
         val result = PaginationService.paginateClaims(claims, 5, baseUrl)
         val items  = result.paginationViewModel.items
 
-        items.filter(_.ellipsis).size shouldBe 2
+        items.count(_.ellipsis) shouldBe 2
         items.head.number shouldBe "1"
         items.last.number shouldBe "10"
       }
 
       "show ellipsis before last pages when current page is near the end" in {
-        val claims = makeClaimInfos(100) // 10 pages
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage * 10) // 10 pages
         val result = PaginationService.paginateClaims(claims, 10, baseUrl)
         val items  = result.paginationViewModel.items
 
@@ -136,30 +137,30 @@ class PaginationServiceSpec extends BaseSpec {
       }
 
       "not add ellipsis when range is adjacent to first page" in {
-        val claims = makeClaimInfos(40) // 4 pages
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage * 4) // 4 pages
         val result = PaginationService.paginateClaims(claims, 2, baseUrl)
         val items  = result.paginationViewModel.items
 
         // pages 1,2,3 visible, no gap so no ellipsis before page 1
-        items.filter(_.ellipsis).size shouldBe 0
+        items.count(_.ellipsis) shouldBe 0
       }
     }
 
     "page validation" - {
       "clamp page below 1 to page 1" in {
-        val claims = makeClaimInfos(20)
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage * 2)
         val result = PaginationService.paginateClaims(claims, 0, baseUrl)
         result.currentPage shouldBe 1
       }
 
       "clamp page above totalPages to totalPages" in {
-        val claims = makeClaimInfos(20) // 2 pages
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage * 2) // 2 pages
         val result = PaginationService.paginateClaims(claims, 99, baseUrl)
         result.currentPage shouldBe 2
       }
 
       "default to page 1 when not specified" in {
-        val claims = makeClaimInfos(20)
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage * 2)
         val result = PaginationService.paginateClaims(claims, baseUrl = baseUrl)
         result.currentPage shouldBe 1
       }
@@ -167,7 +168,7 @@ class PaginationServiceSpec extends BaseSpec {
 
     "correct href generation" - {
       "use the baseUrl for page links" in {
-        val claims = makeClaimInfos(20)
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage * 2)
         val result = PaginationService.paginateClaims(claims, 1, "/my-url")
         val items  = result.paginationViewModel.items
 
@@ -177,13 +178,13 @@ class PaginationServiceSpec extends BaseSpec {
       }
 
       "previous link href points to page - 1" in {
-        val claims = makeClaimInfos(20)
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage * 2)
         val result = PaginationService.paginateClaims(claims, 2, baseUrl)
         result.paginationViewModel.previous.map(_.href) shouldBe Some(s"$baseUrl?page=1")
       }
 
       "next link href points to page + 1" in {
-        val claims = makeClaimInfos(20)
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage * 2)
         val result = PaginationService.paginateClaims(claims, 1, baseUrl)
         result.paginationViewModel.next.map(_.href) shouldBe Some(s"$baseUrl?page=2")
       }
@@ -191,13 +192,13 @@ class PaginationServiceSpec extends BaseSpec {
 
     "previous/next link text" - {
       "previous link has the expected text key" in {
-        val claims = makeClaimInfos(20)
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage * 2)
         val result = PaginationService.paginateClaims(claims, 2, baseUrl)
         result.paginationViewModel.previous.flatMap(_.text) shouldBe Some("site.pagination.previous")
       }
 
       "next link has the expected text key" in {
-        val claims = makeClaimInfos(20)
+        val claims = makeClaimInfos(PaginationConfig.recordsPerPage * 2)
         val result = PaginationService.paginateClaims(claims, 1, baseUrl)
         result.paginationViewModel.next.flatMap(_.text) shouldBe Some("site.pagination.next")
       }

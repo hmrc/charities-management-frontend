@@ -15,6 +15,8 @@
  *@
 
 @import play.twirl.api.Html
+@import config.Constants.PaginationConfig
+@import config.Constants.Css
 @import models.ClaimInfo
 @import viewmodels.govuk.PaginationFluency.PaginationViewModel
 @import services.PaginationStatus
@@ -46,29 +48,29 @@
    customBackLinkUrl = Some(hmrcServicesHomeUrl)
 )   {
 
-   <span class="govuk-caption-l charity-name-caption">@messages("charityRepaymentDashboardAgent.caption.name", agentName)</span>
+   <span class="@Css.captionLCssClass @Css.charityNameCaptionCssClass">@messages("charityRepaymentDashboardAgent.caption.name", agentName)</span>
    
-   <span class="govuk-caption-l">@messages("charityRepaymentDashboardAgent.caption.ref", hmrcCharityReference)</span>
+   <span class="@Css.captionLCssClass">@messages("charityRepaymentDashboardAgent.caption.ref", hmrcCharityReference)</span>
 
-   <h1 class="govuk-heading-xl">@messages("charityRepaymentDashboardAgent.heading")</h1>
+   <h1 class="@Css.headingXLCssClass">@messages("charityRepaymentDashboardAgent.heading")</h1>
 
-   <p class="govuk-body">@Html(messages("charityRepaymentDashboardAgent.p1", giftAidOtherIncomeCommunityBuildingsUrl))</p>
+   <p class="@Css.bodyCssClass">@Html(messages("charityRepaymentDashboardAgent.p1", giftAidOtherIncomeCommunityBuildingsUrl))</p>
 
-   <h2 class = "govuk-heading-m">@messages("charityRepaymentDashboardAgent.subheading1")</h2>
+   <h2 class="@Css.headingMCssClass">@messages("charityRepaymentDashboardAgent.subheading1")</h2>
 
-   <p class="govuk-body">@Html(messages("charityRepaymentDashboard.link.1a", repaymentClaimDetailsUrl))</p>
+   <p class="@Css.bodyCssClass">@Html(messages("charityRepaymentDashboard.link.1a", repaymentClaimDetailsUrl))</p>
 
-   <p class="govuk-body">@Html(messages("charityRepaymentDashboardAgent.link.2", hmrcRecognisedSoftwareUrl))</p>
+   <p class="@Css.bodyCssClass">@Html(messages("charityRepaymentDashboardAgent.link.2", hmrcRecognisedSoftwareUrl))</p>
 
-   <h2 class = "govuk-heading-m">@messages("charityRepaymentDashboardAgent.subheading2")</h2>
+   <h2 class="@Css.headingMCssClass">@messages("charityRepaymentDashboardAgent.subheading2")</h2>
 
    @if(paginationStatus.totalRecords == 0) {
 
-      <p class="govuk-body">@Html(messages("charityRepaymentDashboardAgent.p2.0",paginationStatus.totalRecords))</p>
+      <p class="@Css.bodyCssClass">@Html(messages("charityRepaymentDashboardAgent.p2.0",paginationStatus.totalRecords))</p>
    
    } else {
 
-      <p class="govuk-body">@Html(messages("charityRepaymentDashboardAgent.p2.1", (paginationStatus.currentPage-1)*10+1, Math.min(paginationStatus.currentPage*10, paginationStatus.totalRecords), paginationStatus.totalRecords))</p>
+      <p class="@Css.bodyCssClass">@Html(messages("charityRepaymentDashboardAgent.p2.1", (paginationStatus.currentPage-1) * PaginationConfig.recordsPerPage + 1, Math.min(paginationStatus.currentPage*10, paginationStatus.totalRecords), paginationStatus.totalRecords))</p>
 
       @claimsTable(claims, makeRepaymentClaimUrl, deleteClaimUrl)
 

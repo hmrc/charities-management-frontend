@@ -23,6 +23,7 @@ import models.*
 import org.apache.pekko.actor.ActorSystem
 import play.api.Configuration
 import play.api.Logging
+import play.api.http.Status.{BAD_REQUEST, NOT_FOUND, OK}
 import play.api.libs.json.JsNull
 import play.api.libs.json.Json
 import play.api.libs.json.Reads
@@ -117,7 +118,7 @@ class ClaimsConnectorImpl @Inject() (
         .fold(request)(p => request.withBody(Json.toJson(p)))
         .execute[HttpResponse]
         .flatMap(response =>
-          if response.status == 200 then
+          if response.status == OK then
             response
               .parseJSON[O]()
               .fold(
@@ -127,8 +128,8 @@ class ClaimsConnectorImpl @Inject() (
                 },
                 Future.successful
               )
-          else if noneOnNotFound && response.status == 404 then Future.successful(noneValue)
-          else if response.status == 400 then
+          else if noneOnNotFound && response.status == NOT_FOUND then Future.successful(noneValue)
+          else if response.status == BAD_REQUEST then
             response
               .parseJSON[ClaimError]()
               .fold(

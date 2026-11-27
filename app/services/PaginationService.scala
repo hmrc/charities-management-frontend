@@ -16,14 +16,9 @@
 
 package services
 
+import config.Constants.PaginationConfig
 import viewmodels.govuk.PaginationFluency.*
 import models.*
-
-case class PaginationConfig(
-  recordsPerPage: Int = 10,
-  maxRecords: Int = 10000,
-  maxVisiblePages: Int = 3
-)
 
 trait PaginationStatus {
   val totalRecords: Int
@@ -40,8 +35,6 @@ case class ClaimsPaginationResult(
 ) extends PaginationStatus
 
 object PaginationService {
-
-  private val config = PaginationConfig()
 
   def paginateClaims(
     allClaims: Seq[ClaimInfo],
@@ -75,14 +68,14 @@ object PaginationService {
   }
 
   private def calculateTotalPages(totalRecords: Int): Int =
-    Math.ceil(totalRecords.toDouble / config.recordsPerPage).toInt
+    Math.ceil(totalRecords.toDouble / PaginationConfig.recordsPerPage).toInt
 
   private def validateCurrentPage(currentPage: Int, totalPages: Int): Int =
     Math.max(1, Math.min(currentPage, totalPages))
 
   private def calculatePageIndices(currentPage: Int, totalRecords: Int): (Int, Int) = {
-    val startIndex = (currentPage - 1) * config.recordsPerPage
-    val endIndex   = Math.min(startIndex + config.recordsPerPage, totalRecords)
+    val startIndex = (currentPage - 1) * PaginationConfig.recordsPerPage
+    val endIndex   = Math.min(startIndex + PaginationConfig.recordsPerPage, totalRecords)
     (startIndex, endIndex)
   }
 
@@ -153,12 +146,12 @@ object PaginationService {
   }
 
   private def calculatePageRange(currentPage: Int, totalPages: Int): Range = {
-    val halfVisible = config.maxVisiblePages / 2
+    val halfVisible = PaginationConfig.maxVisiblePages / 2
     val startPage   = Math.max(1, currentPage - halfVisible)
-    val endPage     = Math.min(totalPages, startPage + config.maxVisiblePages - 1)
+    val endPage     = Math.min(totalPages, startPage + PaginationConfig.maxVisiblePages - 1)
 
-    val adjustedStartPage = if (endPage - startPage < config.maxVisiblePages - 1) {
-      Math.max(1, endPage - config.maxVisiblePages + 1)
+    val adjustedStartPage = if (endPage - startPage < PaginationConfig.maxVisiblePages - 1) {
+      Math.max(1, endPage - PaginationConfig.maxVisiblePages + 1)
     } else startPage
 
     adjustedStartPage to endPage

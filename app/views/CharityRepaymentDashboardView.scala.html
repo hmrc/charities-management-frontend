@@ -15,6 +15,7 @@
  *@
 
 @import play.twirl.api.Html
+@import config.Constants.Css
 @import views.html.templates.{Card, CardGroup}
 
 @this(
@@ -29,23 +30,23 @@ giftAidOtherIncomeCommunityBuildingsUrl: String, hmrcServicesHomeUrl:String,clai
     customBackLinkUrl = Some(hmrcServicesHomeUrl)
 ) {
 
-    <span class="govuk-caption-l charity-name-caption">@messages("charityRepaymentDashboard.caption.name", orgName.getOrElse(""))</span>
+    <span class="@Css.captionLCssClass @Css.charityNameCaptionCssClass">@messages("charityRepaymentDashboard.caption.name", orgName.getOrElse(""))</span>
     
-    <span class="govuk-caption-l">@messages("charityRepaymentDashboard.caption.ref", hmrcCharityReference)</span>
+    <span class="@Css.captionLCssClass">@messages("charityRepaymentDashboard.caption.ref", hmrcCharityReference)</span>
 
-    <h1 class="govuk-heading-xl">@messages("charityRepaymentDashboard.heading")</h1>
+    <h1 class="@Css.headingXLCssClass">@messages("charityRepaymentDashboard.heading")</h1>
 
-    <p class="govuk-body">@Html(messages("charityRepaymentDashboard.para", giftAidOtherIncomeCommunityBuildingsUrl))</p>
+    <p class="@Css.bodyCssClass">@Html(messages("charityRepaymentDashboard.para", giftAidOtherIncomeCommunityBuildingsUrl))</p>
 
-    <h2 class="govuk-heading-m">@messages("charityRepaymentDashboard.subheading")</h2>
+    <h2 class="@Css.headingMCssClass">@messages("charityRepaymentDashboard.subheading")</h2>
     @if(!claimExist) {
-        <p class="govuk-body">@Html(messages("charityRepaymentDashboard.link.1a", makeRepaymentClaimUrl))</p>
+        <p class="@Css.bodyCssClass">@Html(messages("charityRepaymentDashboard.link.1a", makeRepaymentClaimUrl))</p>
     }
     @if(claimExist) {
-        <p class="govuk-body">@Html(messages("charityRepaymentDashboard.link.1b", makeRepaymentClaimUrl))</p>
+        <p class="@Css.bodyCssClass">@Html(messages("charityRepaymentDashboard.link.1b", makeRepaymentClaimUrl))</p>
     }
 
-    <p class="govuk-body">@Html(messages("charityRepaymentDashboard.link.2", hmrcRecognisedSoftwareUrl))</p>
+    <p class="@Css.bodyCssClass">@Html(messages("charityRepaymentDashboard.link.2", hmrcRecognisedSoftwareUrl))</p>
 
 
 }

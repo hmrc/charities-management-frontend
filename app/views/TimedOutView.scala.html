@@ -15,6 +15,7 @@
  *@
 
 @import play.twirl.api.Html
+@import config.Constants.Css
 
 @this(
     layout: templates.Layout
@@ -24,12 +25,12 @@
 
 @layout(pageTitle = Some(messages("timedOut.title"))) {
     
-    <h1 class="govuk-heading-l">
+    <h1 class="@Css.headingLCssClass">
         @messages("timedOut.heading")
     </h1>
 
-    <p class="govuk-body">
-        <a href="@routes.StartController.start.url" class="govuk-button">
+    <p class="@Css.bodyCssClass">
+        <a href="@routes.StartController.start.url" class="@Css.buttonCssClass">
             @messages("timedOut.button")
         </a>
     </p>
